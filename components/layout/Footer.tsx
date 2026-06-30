@@ -41,7 +41,7 @@ export function Footer() {
       <div
         className="relative w-full overflow-hidden select-none pointer-events-none"
         aria-hidden="true"
-        style={{ height: 'clamp(80px, 12vw, 180px)' }}
+        style={{ height: 'clamp(60px, 15vw, 180px)' }}
       >
         <p
           className="absolute left-1/2 whitespace-nowrap font-sans font-bold leading-none"

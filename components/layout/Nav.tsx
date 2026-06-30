@@ -104,7 +104,7 @@ export function Nav() {
               ? 'bg-background border-border shadow-sm'
               : 'bg-background/80 border-border/60 backdrop-blur-sm',
           ].join(' ')}
-          style={{ minWidth: 0, maxWidth: 860, width: '100%' }}
+          style={{ minWidth: 0, maxWidth: 860, width: '100%', margin: '0 auto' }}
         >
 
           {/* ── Wordmark ─────────────────────────────────────────────────── */}

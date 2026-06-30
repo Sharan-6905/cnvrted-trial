@@ -39,10 +39,14 @@ export function ComparisonSection() {
             transition={{ duration: DURATION.base, delay: 0.15, ease: EASE.default }}
           >
             {/* Column headers */}
-            <div className="grid grid-cols-[1fr_auto_1fr] gap-2 mb-4">
+            <div className="hidden sm:grid grid-cols-[1fr_auto_1fr] gap-2 mb-4">
               <p className="text-caption text-text-secondary font-medium">{WHY_NOT_DATABASE.leftLabel}</p>
               <div />
               <p className="text-caption text-accent font-medium text-right">{WHY_NOT_DATABASE.rightLabel}</p>
+            </div>
+            <div className="sm:hidden flex justify-between mb-4">
+              <p className="text-caption text-text-secondary font-medium">{WHY_NOT_DATABASE.leftLabel}</p>
+              <p className="text-caption text-accent font-medium">{WHY_NOT_DATABASE.rightLabel}</p>
             </div>
 
             {/* Rows */}
@@ -51,20 +55,20 @@ export function ComparisonSection() {
                 <div
                   key={i}
                   className={[
-                    'grid grid-cols-[1fr_auto_1fr] gap-3 items-center px-4 py-3',
                     i < WHY_NOT_DATABASE.rows.length - 1 ? 'border-b border-border' : '',
                   ].join(' ')}
                 >
-                  {/* Left — muted */}
-                  <span className="text-body text-text-secondary">{row.left}</span>
-
-                  {/* VS divider */}
-                  <span className="flex items-center justify-center w-7 h-7 rounded-full border border-border text-caption text-text-tertiary font-mono shrink-0">
-                    vs
-                  </span>
-
-                  {/* Right — teal */}
-                  <span className="text-body text-accent text-right">{row.right}</span>
+                  {/* Desktop: 3-column */}
+                  <div className="hidden sm:grid grid-cols-[1fr_auto_1fr] gap-3 items-center px-4 py-3">
+                    <span className="text-body text-text-secondary">{row.left}</span>
+                    <span className="flex items-center justify-center w-7 h-7 rounded-full border border-border text-caption text-text-tertiary font-mono shrink-0">vs</span>
+                    <span className="text-body text-accent text-right">{row.right}</span>
+                  </div>
+                  {/* Mobile: stacked */}
+                  <div className="sm:hidden flex items-center justify-between px-4 py-3 gap-2">
+                    <span className="text-body text-text-secondary text-sm">{row.left}</span>
+                    <span className="text-body text-accent text-sm text-right">{row.right}</span>
+                  </div>
                 </div>
               ))}
             </div>

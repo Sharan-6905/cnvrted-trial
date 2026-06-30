@@ -233,11 +233,11 @@ export function HeroSection({ forceSuccess = false }: HeroSectionProps) {
             </HeroItem>
           </HeroEntrance>
 
-          {/* ── Right: Hero visual ── */}
+          {/* ── Right: Hero visual — hidden on mobile ── */}
           <HeroItem
             delay={HERO_DELAYS.visual}
             fadeOnly
-            className="w-full"
+            className="hidden lg:block w-full"
           >
             <HeroVisual />
           </HeroItem>
