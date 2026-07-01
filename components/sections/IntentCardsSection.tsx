@@ -68,7 +68,7 @@ export function IntentCardsSection() {
       <div className="mx-auto max-w-[1280px] px-6 md:px-10 lg:px-20">
 
         {/* Header row */}
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10 md:mb-12">
+        <div className="flex flex-col items-center text-center gap-4 mb-10 md:mb-12">
           <div>
             <p className="text-caption font-mono text-text-tertiary uppercase tracking-[0.08em] mb-3">
               {INTENT_CARDS.label}
@@ -77,7 +77,7 @@ export function IntentCardsSection() {
           </div>
           <a
             href="#closing-cta"
-            className="shrink-0 text-body text-text-secondary border border-border rounded-md px-4 py-2 hover:border-text-tertiary hover:text-text-primary transition-colors self-start sm:self-auto"
+            className="shrink-0 text-body text-text-secondary border border-border rounded-md px-4 py-2 hover:border-text-tertiary hover:text-text-primary transition-colors"
           >
             {INTENT_CARDS.viewAllLabel}
           </a>

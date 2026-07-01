@@ -20,11 +20,11 @@ export function HowItWorksSection() {
       <div className="mx-auto max-w-[1280px] px-6 md:px-10 lg:px-20">
 
         {/* Header */}
-        <div className="mb-14 md:mb-16">
+        <div className="mb-14 md:mb-16 text-center">
           <p className="text-caption font-mono text-text-tertiary uppercase tracking-[0.08em] mb-4">
             {HOW_IT_WORKS.label}
           </p>
-          <h2 className="text-h1-fluid text-text-primary max-w-[480px]" style={{ whiteSpace: 'pre-line' }}>
+          <h2 className="text-h1-fluid text-text-primary mx-auto" style={{ whiteSpace: 'pre-line' }}>
             {HOW_IT_WORKS.headline}
           </h2>
         </div>
