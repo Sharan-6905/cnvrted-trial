@@ -78,14 +78,14 @@ export default function ProductPage() {
         {/* Hero */}
         <section className="py-20 md:py-28 border-b border-border">
           <div className="mx-auto max-w-[1280px] px-6 md:px-10 lg:px-20">
-            <div className="max-w-[760px]">
+            <div className="max-w-[760px] text-center mx-auto">
               <p className="text-caption font-mono text-text-tertiary uppercase tracking-[0.08em] mb-4">
                 THE PRODUCT
               </p>
               <h1 className="text-display-fluid font-semibold text-text-primary leading-tight mb-6">
                 Real-time buying signals.<br />For every account in your CRM.
               </h1>
-              <p className="text-body-lg text-text-secondary leading-relaxed max-w-[580px]">
+              <p className="text-body-lg text-text-secondary leading-relaxed max-w-[580px] mx-auto">
                 CNVRTED monitors the dark funnel continuously and surfaces accounts that are actually in-market — with full context on why, who to reach, and what to say.
               </p>
             </div>

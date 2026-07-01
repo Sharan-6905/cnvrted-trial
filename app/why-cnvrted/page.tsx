@@ -69,14 +69,14 @@ export default function WhyCNVRTEDPage() {
         {/* Hero */}
         <section className="py-20 md:py-28 border-b border-border">
           <div className="mx-auto max-w-[1280px] px-6 md:px-10 lg:px-20">
-            <div className="max-w-[720px]">
+            <div className="max-w-[720px] text-center mx-auto">
               <p className="text-caption font-mono text-text-tertiary uppercase tracking-[0.08em] mb-4">
                 WHY CNVRTED
               </p>
               <h1 className="text-display-fluid font-semibold text-text-primary leading-tight mb-6">
                 Intent over everything.
               </h1>
-              <p className="text-body-lg text-text-secondary leading-relaxed mb-8 max-w-[560px]">
+              <p className="text-body-lg text-text-secondary leading-relaxed mb-8 max-w-[560px] mx-auto">
                 Every company in your CRM fits your ICP. Almost none of them are ready to buy right now. CNVRTED shows you which ones are — and exactly why, today.
               </p>
               <a

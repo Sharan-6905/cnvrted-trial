@@ -94,14 +94,14 @@ export default function HowItWorksPage() {
         {/* Hero */}
         <section className="py-20 md:py-28 border-b border-border">
           <div className="mx-auto max-w-[1280px] px-6 md:px-10 lg:px-20">
-            <div className="max-w-[760px]">
+            <div className="max-w-[760px] text-center mx-auto">
               <p className="text-caption font-mono text-text-tertiary uppercase tracking-[0.08em] mb-4">
                 HOW IT WORKS
               </p>
               <h1 className="text-display-fluid font-semibold text-text-primary leading-tight mb-6">
                 From dark funnel<br />to pipeline in minutes.
               </h1>
-              <p className="text-body-lg text-text-secondary leading-relaxed max-w-[580px]">
+              <p className="text-body-lg text-text-secondary leading-relaxed max-w-[580px] mx-auto">
                 Five steps from signal detection to rep action. No manual research, no guessing, no cold lists.
               </p>
             </div>
