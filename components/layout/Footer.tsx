@@ -27,12 +27,6 @@ export function Footer() {
                 {link.label}
               </a>
             ))}
-            <a
-              href="#closing-cta"
-              className="text-body text-text-secondary hover:text-text-primary transition-colors duration-[110ms]"
-            >
-              Contact
-            </a>
           </nav>
         </div>
       </div>
