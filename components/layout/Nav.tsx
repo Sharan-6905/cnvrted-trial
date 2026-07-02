@@ -35,6 +35,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { AnimatePresence } from 'framer-motion'
 import { Container } from '@/components/layout/Container'
 import { Button } from '@/components/ui/Button'
@@ -109,18 +110,20 @@ export function Nav() {
           style={{ minWidth: 0, maxWidth: 1000, width: '100%', margin: '0 auto' }}
         >
 
-          {/* ── Wordmark ─────────────────────────────────────────────────── */}
+          {/* ── Logo ─────────────────────────────────────────────────────── */}
           <Link
             href="/"
             aria-label="CNVRTED — return to homepage"
-            className={[
-              'text-h3 text-text-primary shrink-0 leading-none',
-              // Focus: ring-style override (accent ring vs the global accent outline)
-              'focus-visible:outline-none rounded-sm',
-              'focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2',
-            ].join(' ')}
+            className="shrink-0 focus-visible:outline-none rounded-sm focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
           >
-            {NAV.brand}
+            <Image
+              src="/logo.png"
+              alt="CNVRTED"
+              width={80}
+              height={32}
+              style={{ objectFit: 'contain', height: 28, width: 'auto' }}
+              priority
+            />
           </Link>
 
           {/* ── Desktop nav links ─────────────────────────────────────────── */}
