@@ -146,13 +146,13 @@ export function Nav() {
             ))}
           </nav>
 
-          {/* ── Right side: Join our Slack + hamburger ───────────────────── */}
+          {/* ── Right side: Early access + Slack + hamburger ────────────── */}
           <div className="flex items-center gap-lg">
 
-            {/* Join beta — desktop only */}
+            {/* Early access — visible on all screen sizes */}
             <button
               onClick={() => setBetaOpen(true)}
-              className="hidden md:flex items-center gap-2 text-body font-medium text-white rounded-full px-4 py-1.5 transition-opacity duration-[110ms] hover:opacity-90"
+              className="flex items-center gap-2 text-body font-medium text-white rounded-full px-4 py-1.5 transition-opacity duration-[110ms] hover:opacity-90"
               style={{ backgroundColor: '#0B6B66' }}
             >
               Early access
