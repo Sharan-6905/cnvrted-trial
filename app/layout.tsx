@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     description: META.ogDescription,
     images: [META.ogImage],
   },
-  // metadataBase: new URL('https://cnvrted.com'),  // Uncomment when domain is confirmed
+  metadataBase: new URL('https://cnvrted.com'),
   robots: {
     index: true,
     follow: true,
