@@ -21,19 +21,20 @@ export const metadata: Metadata = {
     description: META.ogDescription,
     images: [
       {
-        url: META.ogImage,
+        url: '/opengraph-image',
         width: 1200,
         height: 630,
         alt: META.ogImageAlt,
       },
     ],
     type: 'website',
+    url: 'https://cnvrted.com',
   },
   twitter: {
     card: 'summary_large_image',
     title: META.ogTitle,
     description: META.ogDescription,
-    images: [META.ogImage],
+    images: ['/opengraph-image'],
   },
   metadataBase: new URL('https://cnvrted.com'),
   robots: {
