@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     description: META.ogDescription,
     images: [
       {
-        url: '/opengraph-image',
+        url: 'https://cnvrted.com/opengraph-image',
         width: 1200,
         height: 630,
         alt: META.ogImageAlt,
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: META.ogTitle,
     description: META.ogDescription,
-    images: ['/opengraph-image'],
+    images: ['https://cnvrted.com/opengraph-image'],
   },
   metadataBase: new URL('https://cnvrted.com'),
   robots: {
