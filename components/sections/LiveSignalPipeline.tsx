@@ -37,15 +37,14 @@ function SalesforceMark() {
   )
 }
 
-// HubSpot sprocket mark: ring + two nodes, orange brand color
+// HubSpot sprocket mark: official glyph (two nodes + ring), orange brand color
 function HubSpotMark() {
   return (
     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style={{ height: 13, width: 13, display: 'block' }}>
-      <circle cx="17.5" cy="5.5" r="2.6" fill="#FF7A59" />
-      <circle cx="6.5" cy="9" r="2.2" fill="#FF7A59" />
-      <circle cx="13.5" cy="17.5" r="4.3" fill="none" stroke="#FF7A59" strokeWidth="2.1" />
-      <line x1="16.1" y1="7.4" x2="8.3" y2="10.6" stroke="#FF7A59" strokeWidth="1.8" />
-      <line x1="13.5" y1="13.2" x2="13.5" y2="7.2" stroke="#FF7A59" strokeWidth="1.8" />
+      <path
+        fill="#FF7A59"
+        d="M18.164 7.93V5.084a2.198 2.198 0 0 0 1.267-1.978v-.067A2.2 2.2 0 0 0 17.238.84h-.067a2.2 2.2 0 0 0-2.193 2.199v.067c0 .854.463 1.601 1.153 2.001v2.822a6.239 6.239 0 0 0-3.05 1.34l-8.06-6.276c.052-.192.09-.39.093-.598A2.462 2.462 0 1 0 2.65 4.858c.542 0 1.037-.17 1.456-.446l7.93 6.176a6.246 6.246 0 0 0-.093 1.064c0 1.008.294 1.947.793 2.747l-2.414 2.414a2.02 2.02 0 0 0-.593-.098 2.033 2.033 0 1 0 2.033 2.033c0-.206-.036-.402-.093-.593l2.388-2.388a6.279 6.279 0 1 0 8.622-9.09c-.855-.53-1.847-.85-2.909-.912ZM17.203 18.29a3.617 3.617 0 1 1 0-7.234 3.617 3.617 0 0 1 0 7.234Z"
+      />
     </svg>
   )
 }
