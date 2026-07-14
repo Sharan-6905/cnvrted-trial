@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useRef, useState } from 'react'
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion'
 import { Target, Sparkle, EnvelopeSimpleOpen, Database, CheckCircle } from '@phosphor-icons/react'
 
 function SalesforceMark() {
@@ -34,7 +34,7 @@ const PIPELINE_STEPS = [
     description: 'The moment an account crosses the intent threshold, CNVRTED assigns a 0–100 score so your reps know exactly who to prioritise first.',
     example: (
       <div className="relative flex w-full flex-col items-center justify-center p-2">
-        <div className="w-full max-w-sm rounded-2xl border border-white/20 bg-black p-6 shadow-2xl">
+        <div className="w-full max-w-[24rem] rounded-2xl border border-white/20 bg-black p-6 shadow-2xl">
           <div className="flex items-end justify-between">
             <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/50">Target Account</p>
@@ -66,7 +66,7 @@ const PIPELINE_STEPS = [
     description: 'CNVRTED writes a plain-English summary of why the account is in-market right now — no digging through a dozen browser tabs.',
     example: (
       <div className="relative flex w-full items-center justify-center p-2">
-        <div className="w-full max-w-sm overflow-hidden rounded-2xl border border-white/20 bg-black shadow-2xl">
+        <div className="w-full max-w-[24rem] overflow-hidden rounded-2xl border border-white/20 bg-black shadow-2xl">
           <div className="border-b border-white/10 bg-white/5 px-4 py-3 flex items-center gap-2">
             <Sparkle weight="fill" className="text-white/70 h-4 w-4" />
             <span className="font-mono text-[10px] uppercase tracking-widest text-white/70">Intelligence Briefing</span>
@@ -92,7 +92,7 @@ const PIPELINE_STEPS = [
     description: 'A ready-to-send outreach draft is generated, tailored to the exact signal that flagged the account in the first place.',
     example: (
       <div className="relative flex w-full items-center justify-center p-2">
-        <div className="w-full max-w-md overflow-hidden rounded-2xl border border-white/20 bg-black shadow-2xl">
+        <div className="w-full max-w-[28rem] overflow-hidden rounded-2xl border border-white/20 bg-black shadow-2xl">
           <div className="border-b border-white/10 bg-white/5 px-4 py-3 flex gap-2">
             <div className="h-2.5 w-2.5 rounded-full bg-white/20" />
             <div className="h-2.5 w-2.5 rounded-full bg-white/20" />
@@ -158,7 +158,7 @@ const PIPELINE_STEPS = [
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ type: "spring", stiffness: 200, damping: 20 }}
-          className="w-full max-w-sm rounded-2xl border border-white bg-black p-6 shadow-[0_0_40px_rgba(255,255,255,0.15)]"
+          className="w-full max-w-[24rem] rounded-2xl border border-white bg-black p-6 shadow-[0_0_40px_rgba(255,255,255,0.15)]"
         >
           <div className="flex items-start justify-between mb-6">
             <div>
@@ -187,98 +187,119 @@ export function PipelineScrollSection() {
   const [active, setActive] = useState<string>('score')
   const activeIndex = PIPELINE_STEPS.findIndex((s) => s.id === active)
 
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: scrollRef,
+    offset: ['start start', 'end end'],
+  })
+
+  useMotionValueEvent(scrollYProgress, 'change', (progress) => {
+    const idx = Math.min(
+      PIPELINE_STEPS.length - 1,
+      Math.max(0, Math.floor(progress * PIPELINE_STEPS.length))
+    )
+    const nextId = PIPELINE_STEPS[idx].id
+    setActive((current) => (current === nextId ? current : nextId))
+  })
+
   return (
-    <section aria-label="From score to pipeline" className="relative bg-black py-24 md:py-32 overflow-hidden">
-      
-      {/* Background glow for depth */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.03),transparent_60%)]" />
+    <section
+      ref={scrollRef}
+      aria-label="From score to pipeline"
+      className="relative bg-black"
+      style={{ height: `${PIPELINE_STEPS.length * 100}vh` }}
+    >
+      <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden py-16 md:py-0">
 
-      <div className="mx-auto w-full max-w-6xl px-[5%] relative z-10">
+        {/* Background glow for depth */}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.03),transparent_60%)]" />
 
-        {/* Header */}
-        <div className="text-center mb-20 md:mb-24">
-          <p className="text-caption font-mono text-white/50 uppercase tracking-[0.15em] mb-4">
-            AFTER THE SIGNAL
-          </p>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl text-white font-bold tracking-tight">
-            From score to closed pipeline.
-          </h2>
-        </div>
+        <div className="mx-auto w-full max-w-[72rem] px-[5%] relative z-10">
 
-        {/* Horizontal Timeline */}
-        <div className="relative flex items-start justify-between mb-12 md:mb-20 px-2 md:px-12 w-full max-w-5xl mx-auto">
-          {/* Connecting line behind the nodes */}
-          <div className="absolute left-[10%] right-[10%] top-[1.25rem] h-[1px] bg-white/10" aria-hidden="true">
-            {/* Animated progress bar over the line */}
-            <motion.div 
-              className="h-full bg-white"
-              animate={{ width: `${(activeIndex / (PIPELINE_STEPS.length - 1)) * 100}%` }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
-            />
+          {/* Header */}
+          <div className="text-center mb-10 md:mb-16">
+            <p className="text-caption font-mono text-white/50 uppercase tracking-[0.15em] mb-4">
+              AFTER THE SIGNAL
+            </p>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl text-white font-bold tracking-tight">
+              From score to closed pipeline.
+            </h2>
           </div>
 
-          {PIPELINE_STEPS.map((step) => {
-            const isActive = active === step.id
-            const Icon = step.icon
-            return (
-              <button
-                key={step.id}
-                onClick={() => setActive(step.id)}
-                className="relative flex flex-col items-center gap-3 md:gap-4 text-center focus:outline-none group z-10 w-20 md:w-32"
-              >
-                <div 
-                  className={`flex h-10 w-10 md:h-12 md:w-12 shrink-0 items-center justify-center rounded-full border transition-all duration-300 ${
-                    isActive 
-                      ? 'border-white bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.3)] scale-110' 
-                      : 'border-white/20 bg-black text-white/50 group-hover:text-white group-hover:border-white/50'
-                  }`}
+          {/* Horizontal Timeline */}
+          <div className="relative flex items-start justify-between mb-8 md:mb-12 px-2 md:px-12 w-full max-w-[64rem] mx-auto">
+            {/* Connecting line behind the nodes */}
+            <div className="absolute left-[10%] right-[10%] top-[1.25rem] h-[1px] bg-white/10" aria-hidden="true">
+              {/* Animated progress bar over the line */}
+              <motion.div
+                className="h-full bg-white"
+                animate={{ width: `${(activeIndex / (PIPELINE_STEPS.length - 1)) * 100}%` }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+              />
+            </div>
+
+            {PIPELINE_STEPS.map((step) => {
+              const isActive = active === step.id
+              const Icon = step.icon
+              return (
+                <div
+                  key={step.id}
+                  className="relative flex flex-col items-center gap-3 md:gap-4 text-center z-10 w-20 md:w-32"
                 >
-                  <Icon weight={isActive ? 'fill' : 'regular'} className="h-5 w-5" />
+                  <div
+                    className={`flex h-10 w-10 md:h-12 md:w-12 shrink-0 items-center justify-center rounded-full border transition-all duration-300 ${
+                      isActive
+                        ? 'border-white bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.3)] scale-110'
+                        : 'border-white/20 bg-black text-white/50'
+                    }`}
+                  >
+                    <Icon weight={isActive ? 'fill' : 'regular'} className="h-5 w-5" />
+                  </div>
+                  <span
+                    className={`text-xs md:text-sm font-semibold tracking-tight transition-colors duration-300 ${
+                      isActive ? 'text-white' : 'text-white/50'
+                    }`}
+                  >
+                    {step.label}
+                  </span>
                 </div>
-                <span 
-                  className={`text-xs md:text-sm font-semibold tracking-tight transition-colors duration-300 ${
-                    isActive ? 'text-white' : 'text-white/50 group-hover:text-white/80'
-                  }`}
-                >
-                  {step.label}
-                </span>
-              </button>
-            )
-          })}
+              )
+            })}
+          </div>
+
+          {/* Detail Panel */}
+          <div className="relative w-full rounded-3xl border border-white/10 bg-[#050505] overflow-hidden min-h-[300px] md:min-h-[400px] shadow-2xl">
+            {/* Very subtle grid background to sell the terminal/UI feel */}
+            <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '24px 24px' }} />
+
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={active}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className="absolute inset-0 flex flex-col md:flex-row p-8 md:p-16 gap-8 md:gap-12"
+              >
+                {/* Left text column */}
+                <div className="flex-1 flex flex-col justify-center max-w-[500px]">
+                  <p className="text-3xl md:text-4xl font-bold text-white mb-6 tracking-tight">
+                    {PIPELINE_STEPS.find(s => s.id === active)?.label}
+                  </p>
+                  <p className="text-base md:text-lg text-white/70 leading-relaxed">
+                    {PIPELINE_STEPS.find(s => s.id === active)?.description}
+                  </p>
+                </div>
+
+                {/* Right cinematic example */}
+                <div className="flex-1 flex items-center justify-center">
+                  {PIPELINE_STEPS.find((step) => step.id === active)?.example}
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
         </div>
-
-        {/* Detail Panel */}
-        <div className="relative w-full rounded-3xl border border-white/10 bg-[#050505] overflow-hidden min-h-[350px] md:min-h-[400px] shadow-2xl">
-          {/* Very subtle grid background to sell the terminal/UI feel */}
-          <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '24px 24px' }} />
-
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={active}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              className="absolute inset-0 flex flex-col md:flex-row p-8 md:p-16 gap-8 md:gap-12"
-            >
-              {/* Left text column */}
-              <div className="flex-1 flex flex-col justify-center max-w-[500px]">
-                <p className="text-3xl md:text-4xl font-bold text-white mb-6 tracking-tight">
-                  {PIPELINE_STEPS.find(s => s.id === active)?.label}
-                </p>
-                <p className="text-base md:text-lg text-white/70 leading-relaxed">
-                  {PIPELINE_STEPS.find(s => s.id === active)?.description}
-                </p>
-              </div>
-
-              {/* Right cinematic example */}
-              <div className="flex-1 flex items-center justify-center">
-                {PIPELINE_STEPS.find((step) => step.id === active)?.example}
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
       </div>
     </section>
   )

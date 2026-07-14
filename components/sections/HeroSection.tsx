@@ -1,233 +1,144 @@
 'use client'
 
-import { useState, useId } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Container } from '@/components/layout/Container'
-import { SectionLabel } from '@/components/ui/SectionLabel'
-import { Button } from '@/components/ui/Button'
 import { StoryVisual } from '@/components/sections/StoryVisual'
-import { HERO, CLOSING_CTA } from '@/content/copy'
-import { DURATION, EASE } from '@/lib/tokens'
-import { formSuccess } from '@/lib/motion'
+import { HERO, TRUST_BAR } from '@/content/copy'
+import { DURATION, EASE, HERO_DELAYS } from '@/lib/tokens'
+import { heroContainer, fadeInUp } from '@/lib/motion'
 
-// ─── Email validation ─────────────────────────────────────────────────────────
+// ─── ScanningBadge ────────────────────────────────────────────────────────────
+// Replaces the plain eyebrow line with a live-looking status pill: a pulsing
+// dot plus the source currently being "scanned," cycling through the same
+// sources shown in the radar visual — so the claim stays tied to what the
+// visual actually depicts rather than inventing a new claim.
 
-function isValidEmail(value: string): boolean {
-  // RFC 5322-ish — validates format and presence of a dot in domain
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())
-}
+const SCAN_SOURCES = ['LinkedIn', 'Reddit', 'Job boards', 'Funding news', 'Websites', 'Tech stacks'] as const
 
-// ─── WaitlistForm ─────────────────────────────────────────────────────────────
+function ScanningBadge() {
+  const [index, setIndex] = useState(0)
 
-interface WaitlistFormProps {
-  onSuccess: () => void
-}
-
-function WaitlistForm({ onSuccess }: WaitlistFormProps) {
-  const emailId = useId()
-  const [email, setEmail] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
-
-  function handleBlur() {
-    if (email && !isValidEmail(email)) {
-      setError(CLOSING_CTA.error.invalidEmail)
-    } else {
-      setError(null)
-    }
-  }
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    const form = e.currentTarget
-    const data = new FormData(form)
-
-    // Honeypot check — bots fill this, humans don't see it
-    if (data.get(CLOSING_CTA.form.honeypotName)) return
-
-    if (!isValidEmail(email)) {
-      setError(CLOSING_CTA.error.invalidEmail)
-      return
-    }
-
-    setError(null)
-    setLoading(true)
-    try {
-      const res = await fetch('/api/waitlist', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim() }),
-      })
-      if (res.status === 409) {
-        setError("You're already on the list!")
-        setLoading(false)
-        return
-      }
-      if (!res.ok) {
-        setError(CLOSING_CTA.error.generic)
-        setLoading(false)
-        return
-      }
-      onSuccess()
-    } catch {
-      setError(CLOSING_CTA.error.generic)
-    } finally {
-      setLoading(false)
-    }
-  }
+  useEffect(() => {
+    const id = setInterval(() => {
+      setIndex((i) => (i + 1) % SCAN_SOURCES.length)
+    }, 2200)
+    return () => clearInterval(id)
+  }, [])
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      noValidate
-      aria-label="Join the CNVRTED waitlist"
-    >
-      {/* Honeypot — hidden from visual users via CSS, not display:none (bots ignore CSS) */}
-      <input
-        type="text"
-        name={CLOSING_CTA.form.honeypotName}
-        defaultValue=""
-        tabIndex={-1}
-        autoComplete="off"
-        aria-hidden="true"
-        className="absolute opacity-0 pointer-events-none w-0 h-0 overflow-hidden"
-      />
-
-      <div className="flex flex-col gap-md">
-        <div className="flex flex-col sm:flex-row gap-sm">
-          <div className="flex flex-col gap-xs flex-1 min-w-0">
-            <label htmlFor={emailId} className="sr-only">
-              {CLOSING_CTA.form.label}
-            </label>
-            <input
-              id={emailId}
-              type="email"
-              name="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              onBlur={handleBlur}
-              placeholder={CLOSING_CTA.form.placeholder}
-              autoComplete="email"
-              required
-              aria-invalid={error ? 'true' : undefined}
-              aria-describedby={error ? `${emailId}-error` : undefined}
-              disabled={loading}
-              className={[
-                'w-full rounded-md border bg-surface px-4 py-3',
-                'text-body text-text-primary placeholder:text-text-tertiary',
-                'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-1',
-                'disabled:opacity-50 disabled:cursor-not-allowed',
-                'transition-colors duration-[200ms]',
-                error
-                  ? 'border-red-500 dark:border-red-400'
-                  : 'border-border hover:border-text-tertiary',
-              ]
-                .filter(Boolean)
-                .join(' ')}
-            />
-          </div>
-
-          <Button
-            type="submit"
-            loading={loading}
-            disabled={loading}
-            className="shrink-0 sm:self-start"
+    <div className="inline-flex items-center gap-2.5 rounded-full border border-border bg-surface/60 py-1.5 pl-2.5 pr-3.5">
+      <span className="relative flex h-1.5 w-1.5 shrink-0">
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-text-primary/50" />
+        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-text-primary" />
+      </span>
+      <span className="text-caption font-mono text-text-tertiary uppercase tracking-label">
+        Scanning
+      </span>
+      <span className="relative inline-block h-[1.1em] min-w-[6ch] overflow-hidden align-middle">
+        <AnimatePresence mode="wait">
+          <motion.span
+            key={SCAN_SOURCES[index]}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.25, ease: EASE.default }}
+            className="absolute left-0 top-0 whitespace-nowrap text-caption font-mono text-text-primary"
           >
-            {HERO.cta}
-          </Button>
-        </div>
-
-        {/* Error message */}
-        <AnimatePresence>
-          {error && (
-            <motion.p
-              id={`${emailId}-error`}
-              role="alert"
-              initial={{ opacity: 0, y: -4 }}
-              animate={{ opacity: 1, y: 0, transition: { duration: DURATION.fast, ease: EASE.default } }}
-              exit={{ opacity: 0, y: -4, transition: { duration: DURATION.fast } }}
-              className="text-caption text-red-500 dark:text-red-400"
-            >
-              {error}
-            </motion.p>
-          )}
+            {SCAN_SOURCES[index]}
+          </motion.span>
         </AnimatePresence>
-
-        {/* Microcopy — visible when no error */}
-        {!error && (
-          <p className="text-caption text-text-tertiary">{HERO.microcopy}</p>
-        )}
-      </div>
-    </form>
-  )
-}
-
-// ─── SuccessState ─────────────────────────────────────────────────────────────
-
-function SuccessState() {
-  return (
-    <motion.div
-      variants={formSuccess}
-      initial="hidden"
-      animate="visible"
-      className="flex flex-col gap-xs"
-    >
-      <p className="text-body font-medium text-text-primary">{CLOSING_CTA.success.heading}</p>
-      <p className="text-body text-text-secondary">{CLOSING_CTA.success.body}</p>
-    </motion.div>
+      </span>
+    </div>
   )
 }
 
 // ─── HeroSection ──────────────────────────────────────────────────────────────
-// Headline, subhead, and waitlist form render immediately in the first viewport —
-// no scroll-jack, no animation gate. A compact, fast auto-looping scan visual
-// sits beside the text (below it on mobile). The pipeline timeline lives in its
-// own normal section further down the page (see PipelineScrollSection in page.tsx).
+// Headline and subhead render immediately in the first viewport — no scroll-jack,
+// no animation gate. A compact, fast auto-looping scan visual sits beside the
+// text (below it on mobile). The pipeline timeline lives in its own normal
+// section further down the page (see PipelineScrollSection in page.tsx).
 
 export function HeroSection() {
-  const [submitted, setSubmitted] = useState(false)
-
   return (
-    <section aria-label="Hero" className="relative bg-background pt-32 pb-5xl md:pt-36">
-      <Container className="w-full">
-        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          {/* Text + waitlist — visible immediately, zero interaction required */}
-          <div className="flex flex-col items-start gap-xl">
-            <SectionLabel>{HERO.eyebrow}</SectionLabel>
+    <section aria-label="Hero" className="relative overflow-hidden bg-background pt-32 pb-5xl md:pt-36">
+      {/* Ambient depth — faint top glow + dot grid, matches the treatment used
+          further down the page (PipelineScrollSection) so the hero doesn't
+          read as a flatter, earlier-generation section than the rest of the site. */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.05),transparent_55%)]" />
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.025]"
+        style={{
+          backgroundImage:
+            'radial-gradient(circle at 1px 1px, white 1px, transparent 0)',
+          backgroundSize: '28px 28px',
+        }}
+      />
 
-            <h1
+      <Container className="relative z-10 w-full">
+        <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-10">
+          {/* Text — visible immediately, zero interaction required */}
+          <motion.div
+            variants={heroContainer}
+            initial="hidden"
+            animate="visible"
+            className="flex flex-col items-start gap-xl"
+          >
+            <motion.div
+              variants={fadeInUp}
+              transition={{ delay: HERO_DELAYS.eyebrow, duration: DURATION.base, ease: EASE.default }}
+            >
+              <ScanningBadge />
+            </motion.div>
+
+            <motion.h1
               id="hero-headline"
-              className="text-display-fluid font-sans font-semibold text-text-primary tracking-tight"
-              style={{ whiteSpace: 'pre-line' }}
+              variants={fadeInUp}
+              transition={{ delay: HERO_DELAYS.headline, duration: DURATION.base, ease: EASE.default }}
+              className="text-display-fluid font-semibold text-text-primary tracking-tight"
+              style={{ whiteSpace: 'pre-line', fontFamily: 'var(--font-mono)' }}
             >
               {HERO.headline}
-            </h1>
+            </motion.h1>
 
-            <p className="text-body-lg text-text-secondary leading-relaxed max-w-[520px]">
-              {HERO.subheadline}
-            </p>
+            <motion.p
+              variants={fadeInUp}
+              transition={{ delay: HERO_DELAYS.subheadline, duration: DURATION.base, ease: EASE.default }}
+              className="text-body-lg leading-relaxed max-w-[560px]"
+              style={{ fontFamily: 'var(--font-display)' }}
+            >
+              <span className="text-text-primary font-medium">{HERO.whatItIs}</span>{' '}
+              <span className="text-text-secondary">{HERO.goal}</span>
+            </motion.p>
 
-            <div className="w-full max-w-[480px]">
-              <AnimatePresence mode="wait">
-                {submitted ? (
-                  <SuccessState key="success" />
-                ) : (
-                  <motion.div
-                    key="form"
-                    initial={{ opacity: 1 }}
-                    exit={{ opacity: 0, transition: { duration: DURATION.fast } }}
-                  >
-                    <WaitlistForm onSuccess={() => setSubmitted(true)} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </div>
+            <motion.p
+              variants={fadeInUp}
+              transition={{ delay: HERO_DELAYS.form, duration: DURATION.base, ease: EASE.default }}
+              className="text-caption font-mono text-text-tertiary uppercase tracking-label"
+            >
+              {TRUST_BAR.roles.join('  ·  ')}
+            </motion.p>
+          </motion.div>
 
-          {/* Compact auto-looping scan visual — sources converging into a signal */}
-          <div className="relative h-[340px] w-full overflow-hidden rounded-2xl border border-border bg-surface md:h-[440px]">
+          {/* Compact auto-looping scan visual — sources converging into a signal.
+              Corner-bracket treatment (CornerFrame's motif, applied inline here
+              since the panel needs its own aspect ratio) instead of a plain
+              rounded/bordered box, so it reads as "ours" rather than a generic card. */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: HERO_DELAYS.visual, duration: DURATION.slow, ease: EASE.default }}
+            className="relative h-[340px] w-full overflow-hidden rounded-2xl bg-surface md:h-[460px] lg:-mr-[6%]"
+          >
+            <span className="absolute left-0 top-0 h-4 w-4 border-l-[1.5px] border-t-[1.5px] border-text-tertiary/60" aria-hidden="true" />
+            <span className="absolute right-0 top-0 h-4 w-4 border-r-[1.5px] border-t-[1.5px] border-text-tertiary/60" aria-hidden="true" />
+            <span className="absolute bottom-0 left-0 h-4 w-4 border-b-[1.5px] border-l-[1.5px] border-text-tertiary/60" aria-hidden="true" />
+            <span className="absolute bottom-0 right-0 h-4 w-4 border-b-[1.5px] border-r-[1.5px] border-text-tertiary/60" aria-hidden="true" />
+
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.06),transparent_65%)]" />
+
             <StoryVisual compact className="h-full w-full" />
-          </div>
+          </motion.div>
         </div>
       </Container>
     </section>
