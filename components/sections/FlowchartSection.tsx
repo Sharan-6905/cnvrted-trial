@@ -14,9 +14,9 @@ const STEPS = [
     ),
     label: 'Dark Funnel Sources',
     sublabel: 'Step 1',
-    color: '#6366F1',
-    bg: 'rgba(99,102,241,0.08)',
-    border: 'rgba(99,102,241,0.25)',
+    color: 'var(--color-text-primary)',
+    bg: 'var(--color-accent-dim)',
+    border: 'rgba(255,255,255,0.25)',
     description: 'CNVRTED continuously monitors LinkedIn, Reddit, X, news outlets, job boards, and 50+ public signals — all in real time.',
     tags: ['LinkedIn', 'Reddit', 'X', 'News', 'Job boards'],
     example: (
@@ -47,15 +47,15 @@ const STEPS = [
     label: 'Signal Detection',
     sublabel: 'Step 2',
     color: 'var(--color-accent)',
-    bg: 'rgba(11,107,102,0.08)',
-    border: 'rgba(11,107,102,0.25)',
+    bg: 'var(--color-accent-dim)',
+    border: 'rgba(255,255,255,0.25)',
     description: 'Our AI identifies 4 buying signal types — Hiring, Funding, Tech Change, and Pain Signals — and filters out noise automatically.',
     tags: ['HIRING', 'FUNDING', 'TECH CHANGE', 'PAIN SIGNAL'],
     example: (
       <div className="w-full max-w-[400px] rounded-xl border border-border bg-surface-raised p-4 flex flex-col gap-3">
         <p className="text-[10px] font-mono uppercase tracking-widest text-text-tertiary">Detected signal</p>
         <div className="flex items-center gap-2">
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded" style={{ background: 'rgba(11,107,102,0.12)', color: 'var(--color-accent)' }}>FUNDING</span>
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded" style={{ background: 'var(--color-accent-dim)', color: 'var(--color-accent)' }}>FUNDING</span>
           <span className="text-sm text-text-secondary">Acme Corp raised $25M Series B</span>
         </div>
         <p className="text-xs text-text-tertiary">Noise filtered out · 1 buying signal kept</p>
@@ -72,22 +72,22 @@ const STEPS = [
     ),
     label: 'Intent Scoring',
     sublabel: 'Step 3',
-    color: '#D97706',
-    bg: 'rgba(217,119,6,0.08)',
-    border: 'rgba(217,119,6,0.25)',
+    color: 'var(--color-text-primary)',
+    bg: 'var(--color-accent-dim)',
+    border: 'rgba(255,255,255,0.25)',
     description: 'Every account gets a 0–100 intent score based on recency, signal strength, and ICP fit. HIGH scores mean engage now.',
     tags: ['Score 0–100', 'ICP fit', 'Recency', 'Urgency rank'],
     example: (
-      <div className="w-full max-w-[400px] rounded-xl border p-4 flex flex-col gap-3" style={{ borderColor: 'rgba(217,119,6,0.35)', background: 'var(--color-surface-raised)' }}>
+      <div className="w-full max-w-[400px] rounded-xl border p-4 flex flex-col gap-3" style={{ borderColor: 'rgba(255,255,255,0.3)', background: 'var(--color-surface-raised)' }}>
         <div className="flex items-center justify-between">
           <span className="font-semibold text-text-primary">Acme Corp</span>
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded" style={{ background: '#D97706', color: '#fff' }}>HIGH INTENT</span>
-            <span className="text-2xl font-bold tabular-nums" style={{ color: '#D97706' }}>92</span>
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded" style={{ background: 'var(--color-text-primary)', color: 'var(--color-on-accent)' }}>HIGH INTENT</span>
+            <span className="text-2xl font-bold tabular-nums" style={{ color: 'var(--color-text-primary)' }}>92</span>
           </div>
         </div>
         <div className="h-1.5 w-full rounded-full overflow-hidden" style={{ background: 'var(--color-border)' }}>
-          <div className="h-full rounded-full" style={{ width: '92%', background: '#D97706' }} />
+          <div className="h-full rounded-full" style={{ width: '92%', background: 'var(--color-text-primary)' }} />
         </div>
         <div className="flex justify-between text-[11px] text-text-tertiary">
           <span>Recency: high</span>
@@ -108,9 +108,9 @@ const STEPS = [
     ),
     label: 'Enriched Context',
     sublabel: 'Step 4',
-    color: '#7C3AED',
-    bg: 'rgba(124,58,237,0.08)',
-    border: 'rgba(124,58,237,0.25)',
+    color: 'var(--color-text-primary)',
+    bg: 'var(--color-accent-dim)',
+    border: 'rgba(255,255,255,0.25)',
     description: 'Each signal comes with full context — company size, decision maker, why they are in-market, and a suggested outreach angle.',
     tags: ['Company data', 'Decision maker', 'Why now', 'Outreach angle'],
     example: (
@@ -142,8 +142,8 @@ const STEPS = [
     label: 'Push to Your CRM',
     sublabel: 'Step 5',
     color: 'var(--color-accent)',
-    bg: 'rgba(11,107,102,0.08)',
-    border: 'rgba(11,107,102,0.25)',
+    bg: 'var(--color-accent-dim)',
+    border: 'rgba(255,255,255,0.25)',
     description: 'Signals flow directly into Salesforce, HubSpot, Outreach, or Apollo — so your reps see them where they already work.',
     tags: ['Salesforce', 'HubSpot', 'Outreach', 'Apollo'],
     example: (
@@ -151,7 +151,7 @@ const STEPS = [
         <p className="text-[10px] font-mono uppercase tracking-widest text-text-tertiary">Synced to Salesforce</p>
         <div className="flex items-center justify-between rounded-lg border border-border px-3 py-2">
           <span className="text-sm font-medium text-text-primary">Acme Corp</span>
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded" style={{ background: 'rgba(11,107,102,0.12)', color: 'var(--color-accent)' }}>New · Score 92</span>
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded" style={{ background: 'var(--color-accent-dim)', color: 'var(--color-accent)' }}>New · Score 92</span>
         </div>
         <p className="text-xs text-text-tertiary">Your rep sees it in their queue — no export needed.</p>
       </div>
@@ -294,7 +294,7 @@ export function FlowchartSection() {
                 <div className="flex items-center gap-4 mb-6">
                   <div
                     className="w-16 h-16 rounded-2xl flex items-center justify-center"
-                    style={{ backgroundColor: activeStep.color + '20', color: activeStep.color }}
+                    style={{ backgroundColor: 'var(--color-accent-dim)', color: activeStep.color }}
                   >
                     {activeStep.icon}
                   </div>

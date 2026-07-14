@@ -28,6 +28,8 @@ export interface IntentCardCopy {
   source: string
   intent: IntentLevel
   score: number
+  /** Which underlying signals fed the score — shown on hover/click expand. */
+  signals: string[]
 }
 
 export interface HowItWorksStep {
@@ -140,6 +142,7 @@ export const INTENT_CARDS = {
       source: "Moneycontrol",
       intent: "HIGH" as IntentLevel,
       score: 82,
+      signals: ["$50M+ raise announced", "Content team hiring surge", "New GTM lead posted on LinkedIn"],
     },
     {
       tag: "HIRING" as SignalType,
@@ -149,6 +152,7 @@ export const INTENT_CARDS = {
       source: "Deadline",
       intent: "HIGH" as IntentLevel,
       score: 78,
+      signals: ["2 senior exec hires in 30 days", "Production headcount up 40%", "New tooling budget signaled"],
     },
     {
       tag: "TECH CHANGE" as SignalType,
@@ -158,6 +162,7 @@ export const INTENT_CARDS = {
       source: "Variety",
       intent: "HIGH" as IntentLevel,
       score: 78,
+      signals: ["User base crossed 100M", "Content-ops job postings tripled", "Infra/tooling RFP signals detected"],
     },
     {
       tag: "PAIN SIGNAL" as SignalType,
@@ -167,6 +172,7 @@ export const INTENT_CARDS = {
       source: "TellyCast",
       intent: "MEDIUM" as IntentLevel,
       score: 75,
+      signals: ["Industry award win", "Press cycle mentions competitors", "No hiring signal yet"],
     },
   ] satisfies IntentCardCopy[],
 } as const
@@ -232,6 +238,52 @@ export const WHY_NOT_DATABASE = {
     { left: "Outdated intent",        right: "Live intent from the market" },
     { left: "You chase",              right: "You engage at the right time" },
     { left: "Low reply rates",        right: "Higher reply rates" },
+  ],
+} as const
+
+// --- Interactive Demo ---
+
+export const INTERACTIVE_DEMO = {
+  label: "TRY IT",
+  headline: "See a signal generate live.",
+  body: "Enter a company name or URL — we'll simulate what a live signal card would look like.",
+  placeholder: "Company name or URL",
+  cta: "Detect",
+  loadingLabel: "Scanning sources...",
+  disclaimer: "Simulated example — not a live scan.",
+} as const
+
+// --- FAQ / Methodology ---
+
+export const FAQ = {
+  label: "METHODOLOGY",
+  headline: "How the scoring works.",
+  items: [
+    {
+      question: "Where does the data come from?",
+      answer:
+        "Public sources only — LinkedIn hiring and profile activity, Reddit and X discussions, company websites and job boards, news and press releases, and 50+ other open-web sources. We never access private or gated data.",
+    },
+    {
+      question: "How is the intent score calculated?",
+      answer:
+        "Every detected signal is scored on three factors: recency (how new is it), strength (how strong an indicator of buying intent), and ICP fit (how well the account matches your ideal customer profile). The weighted combination produces a 0-100 score — HIGH means engage now, MEDIUM means monitor.",
+    },
+    {
+      question: "Can I see why an account scored the way it did?",
+      answer:
+        "Yes — every card is expandable. Click or hover any signal card to see exactly which underlying signals (funding, hiring, tech changes, etc.) contributed to the score, not just the final number.",
+    },
+    {
+      question: "Is this compliant with data privacy regulations?",
+      answer:
+        "We only aggregate information that is already publicly visible. No private messaging content, no scraping behind logins, and no reselling of personal data. You can request removal of any account from monitoring at any time.",
+    },
+    {
+      question: "How often are signals updated?",
+      answer:
+        "Continuously. Sources are polled in near real time, so a funding announcement or hiring spree can surface in your feed within hours, not weeks.",
+    },
   ],
 } as const
 

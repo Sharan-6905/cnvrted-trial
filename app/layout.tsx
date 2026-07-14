@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { sans, mono } from '@/styles/fonts'
+import { sans, mono, display } from '@/styles/fonts'
 import { MotionProvider } from '@/components/providers/MotionProvider'
 import { Nav } from '@/components/layout/Nav'
 import { META, UI } from '@/content/copy'
@@ -8,12 +8,9 @@ import './globals.css'
 export const metadata: Metadata = {
   title: META.title,
   description: META.description,
+  // `icon` intentionally omitted — app/icon.tsx (SignalMark) is the file-
+  // convention favicon; an explicit `icons.icon` entry here would suppress it.
   icons: {
-    icon: [
-      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-      { url: '/favicon-192x192.png', sizes: '192x192', type: 'image/png' },
-    ],
     apple: '/apple-touch-icon.png',
   },
   openGraph: {
@@ -51,9 +48,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${sans.variable} ${mono.variable}`}
+      className={`${sans.variable} ${mono.variable} ${display.variable}`}
     >
       <head>
+        {/* This Next.js version doesn't auto-inject the <link> for app/icon.tsx
+            (the route itself works — confirmed via direct request — but the
+            metadata generator doesn't wire it into <head>). Linking manually. */}
+        <link rel="icon" href="/icon" type="image/png" sizes="32x32" />
         <meta property="og:image" content="https://www.cnvrted.com/og-image.jpg" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />

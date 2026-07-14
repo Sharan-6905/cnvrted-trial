@@ -36,6 +36,7 @@
   /* ── Fonts ─────────────────────────────────────────────────────────────── */
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
+  --font-display: var(--font-display);
 
   /* ── Color — Dark Mode (register.cnvrted.com questionnaire palette) ─────── */
   --color-background:          #0a0a0a;   /* Near-black page */
@@ -181,6 +182,7 @@ html {
 }
 
 body {
+  position: relative;
   background-color: var(--color-background);
   color: var(--color-text-primary);
   font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
@@ -188,6 +190,40 @@ body {
   -moz-osx-font-smoothing: grayscale;
   /* Prevent layout shift from scrollbar appearing on content-heavy sections */
   scrollbar-gutter: stable;
+}
+
+/* ─── Grain Texture ─────────────────────────────────────────────────────────
+ * Very subtle noise over the black background so it doesn't read as flat
+ * generic dark-mode. Fixed + pointer-events:none so it never affects layout
+ * or interaction; opacity kept low enough to be barely perceptible.
+ * ─────────────────────────────────────────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ─── Display Typography ────────────────────────────────────────────────────
+ * Headlines (H1/H2) use the distinctive display face; body text stays on
+ * the readable sans. Keeps the site opinionated without hurting legibility.
+ * ─────────────────────────────────────────────────────────────────────────── */
+h1, h2,
+.text-display-fluid, .text-h1-fluid, .text-h2 {
+  font-family: var(--font-display), var(--font-sans), system-ui, sans-serif;
+}
+
+/* ─── Signal Mark — pending/detecting pulse ────────────────────────────────── */
+@keyframes signal-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(0.94); }
+  50%      { opacity: 1;    transform: scale(1.06); }
+}
+.signal-mark--pulse {
+  animation: signal-pulse 1.6s ease-in-out infinite;
 }
 
 /* ─── Typography Defaults ──────────────────────────────────────────────────────

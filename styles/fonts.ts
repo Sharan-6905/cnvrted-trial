@@ -17,7 +17,7 @@
  * component proportions will be accurate enough to develop against.
  */
 
-import { JetBrains_Mono } from 'next/font/google'
+import { JetBrains_Mono, Space_Grotesk } from 'next/font/google'
 import localFont from 'next/font/local'
 
 // ─── Inter — from Cormorant_Garamond,Inter.zip (static weights) ─────────────
@@ -75,4 +75,16 @@ export const mono = JetBrains_Mono({
   variable: '--font-mono',
   display: 'swap',
   preload: false, // Below-the-fold usage — don't block initial render
+})
+
+// ─── Space Grotesk — distinctive display face for H1/H2/section labels ───────
+// Deliberately not the same family as body text (Inter): a geometric,
+// slightly technical grotesque that reads as "ours" even without color.
+// Body copy stays on `sans` for readability — this is headline-only.
+export const display = Space_Grotesk({
+  subsets: ['latin'],
+  weight: ['500', '600', '700'],
+  variable: '--font-display',
+  display: 'swap',
+  preload: true,
 })

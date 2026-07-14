@@ -9,6 +9,7 @@
  */
 
 import type { IntentLevel } from '@/content/copy'
+import { SignalMark } from '@/components/ui/SignalMark'
 
 interface BadgeProps {
   level: IntentLevel
@@ -34,12 +35,13 @@ export function Badge({ level, className = '' }: BadgeProps) {
         COLOURS[level],
         'text-mono-tag font-mono',
         'py-xs px-[0.625rem]', /* 4px / 10px per spec */
-        'leading-none',
+        'leading-none gap-1',
         className,
       ]
         .filter(Boolean)
         .join(' ')}
     >
+      <SignalMark size={9} />
       {LABEL[level]}
     </span>
   )
