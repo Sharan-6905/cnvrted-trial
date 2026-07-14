@@ -1,14 +1,14 @@
 'use client'
 
-import { useState, useId, useRef } from 'react'
+import { useState, useId } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Container } from '@/components/layout/Container'
 import { SectionLabel } from '@/components/ui/SectionLabel'
 import { Button } from '@/components/ui/Button'
-import { HeroEntrance, HeroItem } from '@/components/motion/HeroEntrance'
-import { LiveSignalPipeline } from '@/components/sections/LiveSignalPipeline'
+import { StoryVisual } from '@/components/sections/StoryVisual'
+import { PipelineScrollSection } from '@/components/sections/PipelineScrollSection'
 import { HERO, CLOSING_CTA } from '@/content/copy'
-import { HERO_DELAYS, DURATION, EASE } from '@/lib/tokens'
+import { DURATION, EASE } from '@/lib/tokens'
 import { formSuccess } from '@/lib/motion'
 
 // ─── Email validation ─────────────────────────────────────────────────────────
@@ -180,60 +180,38 @@ function SuccessState() {
 }
 
 // ─── HeroSection ──────────────────────────────────────────────────────────────
+// The full-page story visual loops continuously on its own (no scroll-jack).
+// The headline, subhead, and waitlist form sit in a normal section below it.
 
-interface HeroSectionProps {
-  /** Pre-sets success state (for preview/testing). */
-  forceSuccess?: boolean
-}
-
-export function HeroSection({ forceSuccess = false }: HeroSectionProps) {
-  const [submitted, setSubmitted] = useState(forceSuccess)
+export function HeroSection() {
+  const [submitted, setSubmitted] = useState(false)
 
   return (
-    <section
-      aria-label="Hero"
-      className="relative min-h-[100svh] flex items-center bg-background"
-    >
-      <Container className="w-full py-2xl">
-        <div
-          className={[
-            'grid gap-3xl',
-            // Mobile: single column (text → visual)
-            // md (768px): single column but more spacious
-            // lg (1024px): two-column grid
-            'grid-cols-1 lg:grid-cols-[1fr_400px] xl:grid-cols-[1fr_440px]',
-            'items-center',
-          ]
-            .filter(Boolean)
-            .join(' ')}
-        >
-          {/* ── Left: Text content ── */}
-          <HeroEntrance className="flex flex-col gap-xl max-w-[560px]">
-            {/* Eyebrow / section label */}
-            <HeroItem delay={HERO_DELAYS.eyebrow}>
-              <SectionLabel>{HERO.eyebrow}</SectionLabel>
-            </HeroItem>
+    <>
+      <section aria-label="Product story" className="relative h-[100svh] w-full overflow-hidden bg-background">
+        <StoryVisual className="h-full w-full" />
+      </section>
 
-            {/* Headline — id="hero-headline" triggers nav scroll detection */}
-            <HeroItem delay={HERO_DELAYS.headline}>
-              <h1
-                id="hero-headline"
-                className="text-display-fluid font-sans font-semibold text-text-primary tracking-tight"
-                style={{ whiteSpace: 'pre-line' }}
-              >
-                {HERO.headline}
-              </h1>
-            </HeroItem>
+      <PipelineScrollSection />
 
-            {/* Subheadline */}
-            <HeroItem delay={HERO_DELAYS.subheadline}>
-              <p className="text-body-lg text-text-secondary leading-relaxed">
-                {HERO.subheadline}
-              </p>
-            </HeroItem>
+      <section aria-label="Hero" className="relative bg-background py-6xl">
+        <Container className="w-full">
+          <div className="mx-auto flex max-w-[720px] flex-col items-center gap-xl text-center">
+            <SectionLabel>{HERO.eyebrow}</SectionLabel>
 
-            {/* Form / success state */}
-            <HeroItem delay={HERO_DELAYS.form} className="w-full">
+            <h1
+              id="hero-headline"
+              className="text-display-fluid font-sans font-semibold text-text-primary tracking-tight"
+              style={{ whiteSpace: 'pre-line' }}
+            >
+              {HERO.headline}
+            </h1>
+
+            <p className="text-body-lg text-text-secondary leading-relaxed max-w-[560px]">
+              {HERO.subheadline}
+            </p>
+
+            <div className="w-full max-w-[480px]">
               <AnimatePresence mode="wait">
                 {submitted ? (
                   <SuccessState key="success" />
@@ -247,19 +225,10 @@ export function HeroSection({ forceSuccess = false }: HeroSectionProps) {
                   </motion.div>
                 )}
               </AnimatePresence>
-            </HeroItem>
-          </HeroEntrance>
-
-          {/* ── Right: Hero visual — hidden on mobile ── */}
-          <HeroItem
-            delay={HERO_DELAYS.visual}
-            fadeOnly
-            className="hidden lg:block w-full"
-          >
-            <LiveSignalPipeline />
-          </HeroItem>
-        </div>
-      </Container>
-    </section>
+            </div>
+          </div>
+        </Container>
+      </section>
+    </>
   )
 }

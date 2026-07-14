@@ -200,9 +200,9 @@ export default function Phase4PreviewPage() {
         </div>
 
         {/* ─────────────────────────────────────────────────────────────── */}
-        <Divider label="7 · Waitlist success state" />
-        <PreviewFrame label="Success state — form replaced in-place" width={1280}>
-          <HeroSection forceSuccess />
+        <Divider label="7 · Waitlist success state (retired — hero no longer has an inline form)" />
+        <PreviewFrame label="Hero no longer renders a form; lead capture lives in Nav's Early access modal" width={1280}>
+          <HeroSection />
         </PreviewFrame>
 
         {/* ─────────────────────────────────────────────────────────────── */}

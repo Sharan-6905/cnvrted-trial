@@ -57,7 +57,7 @@ function SlackLogo() {
           fontFamily: 'Arial, sans-serif',
           fontSize: 15,
           fontWeight: 700,
-          color: '#1D1C1D',
+          color: 'var(--color-text-primary)',
           letterSpacing: '-0.2px',
           lineHeight: 1,
         }}
@@ -99,10 +99,10 @@ function ApolloLogo() {
         aria-hidden="true"
         style={{ height: 26, width: 26, display: 'block' }}
       >
-        {/* Outer A shape in black */}
-        <polygon points="16,2 30,28 22,28 16,16 10,28 2,28" fill="#000000" />
-        {/* Inner cutout to create the tent/A frame hollow */}
-        <polygon points="16,10 21,20 11,20" fill="white" />
+        {/* Outer A shape */}
+        <polygon points="16,2 30,28 22,28 16,16 10,28 2,28" fill="var(--color-text-primary)" />
+        {/* Inner cutout to create the tent/A frame hollow — matches section background */}
+        <polygon points="16,10 21,20 11,20" fill="var(--color-surface)" />
         {/* Yellow downward triangle at the peak */}
         <polygon points="13.5,10 18.5,10 16,14" fill="#F5C518" />
       </svg>
@@ -111,7 +111,7 @@ function ApolloLogo() {
           fontFamily: 'Arial, sans-serif',
           fontSize: 15,
           fontWeight: 700,
-          color: '#000000',
+          color: 'var(--color-text-primary)',
           letterSpacing: '-0.3px',
           lineHeight: 1,
         }}
@@ -192,7 +192,7 @@ export function IntegrationsSection() {
                   <>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={`https://cdn.simpleicons.org/${tool.slug}`}
+                      src={`https://cdn.simpleicons.org/${tool.slug}/f5f5f5`}
                       alt=""
                       width={24}
                       height={24}

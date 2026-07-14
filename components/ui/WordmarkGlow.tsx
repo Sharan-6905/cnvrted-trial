@@ -36,7 +36,9 @@ export function WordmarkGlow({ text, className = '' }: WordmarkGlowProps) {
     }
 
     const onMove = (e: PointerEvent) => {
-      const rect = wrap.getBoundingClientRect()
+      // mask-image's `at var(--x) var(--y)` is positioned relative to the
+      // masked element's own box (`spot`), not the wrapper — measure against it.
+      const rect = spot.getBoundingClientRect()
       pendingX = e.clientX - rect.left
       pendingY = e.clientY - rect.top
       if (frame === null) frame = requestAnimationFrame(apply)
