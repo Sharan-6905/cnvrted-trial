@@ -171,6 +171,9 @@ export function StoryVisual({ className = '', compact = false }: StoryVisualProp
   const aiNodeScale = useTransform(convergeT, [0.55, 1], [0.7, 1])
 
   const cardZoneOpacity = useTransform(profileT, [0, 0.08, 0.95, 1], [0, 1, 1, 0])
+  // Score badge/number stay hidden until the count-up actually starts — no
+  // bare "0" flash while the profile fields are still assembling.
+  const scoreZoneOpacity = useTransform(profileT, [0.64, 0.72], [0, 1])
   const scoreMV = useTransform(profileT, [0.72, 0.94], [0, 92])
   const [scoreDisplay, setScoreDisplay] = useState(0)
   useMotionValueEvent(scoreMV, 'change', (v) => setScoreDisplay(Math.round(v)))
@@ -237,14 +240,17 @@ export function StoryVisual({ className = '', compact = false }: StoryVisualProp
         >
           <div className="flex items-center justify-between border-b border-border pb-2.5">
             <p className="text-body font-semibold text-text-primary">{HERO.visualCompanyName}</p>
-            <div className="flex items-center gap-1.5">
+            <motion.div
+              className="flex items-center gap-1.5"
+              style={{ opacity: staticFinal ? 1 : scoreZoneOpacity }}
+            >
               <span className="inline-flex items-center rounded-md bg-accent px-[0.5rem] py-xs text-[9px] font-mono leading-none text-on-accent">
                 HIGH INTENT
               </span>
               <span className="text-[1.1rem] font-bold leading-none tabular-nums text-text-primary">
                 {staticFinal ? 92 : scoreDisplay}
               </span>
-            </div>
+            </motion.div>
           </div>
 
           {PROFILE_FIELDS.map((field, i) => (

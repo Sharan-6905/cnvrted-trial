@@ -110,6 +110,7 @@ export function IntentCardsSection() {
             </p>
             <h2 className="text-h1-fluid text-text-primary">{INTENT_CARDS.headline}</h2>
             <p className="text-caption text-text-tertiary mt-3">Hover or tap a card to see why it scored the way it did.</p>
+            <p className="text-caption text-text-tertiary">Illustrative examples — real signals are scored continuously against your specific ICP.</p>
           </div>
           <a
             href="#closing-cta"

@@ -4,6 +4,22 @@ import { motion } from 'framer-motion'
 import { WHY_NOT_DATABASE } from '@/content/copy'
 import { DURATION, EASE } from '@/lib/tokens'
 
+function XIcon() {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" className="w-4 h-4 shrink-0">
+      <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function CheckIcon() {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" className="w-4 h-4 shrink-0">
+      <path d="M3 8.5l3.2 3.2L13 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
 export function ComparisonSection() {
   return (
     <section
@@ -31,47 +47,58 @@ export function ComparisonSection() {
             </h2>
           </motion.div>
 
-          {/* Right: comparison table */}
+          {/* Right: comparison card */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: DURATION.base, delay: 0.15, ease: EASE.default }}
+            className="rounded-xl border border-border overflow-hidden grid grid-cols-2"
           >
             {/* Column headers */}
-            <div className="hidden sm:grid grid-cols-[1fr_auto_1fr] gap-2 mb-4">
-              <p className="text-caption text-text-secondary font-medium">{WHY_NOT_DATABASE.leftLabel}</p>
-              <div />
-              <p className="text-caption text-accent font-medium text-right">{WHY_NOT_DATABASE.rightLabel}</p>
+            <div className="px-4 py-3 border-b border-r border-border bg-surface">
+              <p className="text-caption text-text-tertiary font-medium">{WHY_NOT_DATABASE.leftLabel}</p>
             </div>
-            <div className="sm:hidden flex justify-between mb-4">
-              <p className="text-caption text-text-secondary font-medium">{WHY_NOT_DATABASE.leftLabel}</p>
-              <p className="text-caption text-accent font-medium">{WHY_NOT_DATABASE.rightLabel}</p>
+            <div className="px-4 py-3 border-b border-border" style={{ backgroundColor: 'var(--color-accent-dim)' }}>
+              <p className="text-caption text-accent font-semibold">{WHY_NOT_DATABASE.rightLabel}</p>
             </div>
 
             {/* Rows */}
-            <div className="rounded-lg border border-border overflow-hidden">
-              {WHY_NOT_DATABASE.rows.map((row, i) => (
-                <div
+            {WHY_NOT_DATABASE.rows.map((row, i) => {
+              const isLast = i === WHY_NOT_DATABASE.rows.length - 1
+              return (
+                <motion.div
                   key={i}
-                  className={[
-                    i < WHY_NOT_DATABASE.rows.length - 1 ? 'border-b border-border' : '',
-                  ].join(' ')}
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: DURATION.base, delay: 0.2 + i * 0.06 }}
+                  className="contents"
                 >
-                  {/* Desktop: 3-column */}
-                  <div className="hidden sm:grid grid-cols-[1fr_auto_1fr] gap-3 items-center px-4 py-3">
-                    <span className="text-body text-text-secondary">{row.left}</span>
-                    <span className="flex items-center justify-center w-7 h-7 rounded-full border border-border text-caption text-text-tertiary font-mono shrink-0">vs</span>
-                    <span className="text-body text-accent text-right">{row.right}</span>
+                  {/* Left cell — muted, struck-through */}
+                  <div
+                    className={[
+                      'flex items-center gap-2 px-4 py-3.5 bg-surface border-r border-border',
+                      isLast ? '' : 'border-b border-border',
+                    ].join(' ')}
+                  >
+                    <span className="text-text-tertiary"><XIcon /></span>
+                    <span className="text-body text-text-tertiary line-through decoration-text-tertiary/50">
+                      {row.left}
+                    </span>
                   </div>
-                  {/* Mobile: stacked */}
-                  <div className="sm:hidden flex items-center justify-between px-4 py-3 gap-2">
-                    <span className="text-body text-text-secondary text-sm">{row.left}</span>
-                    <span className="text-body text-accent text-sm text-right">{row.right}</span>
+
+                  {/* Right cell — teal-highlighted */}
+                  <div
+                    className={isLast ? 'flex items-center gap-2 px-4 py-3.5' : 'flex items-center gap-2 px-4 py-3.5 border-b border-border'}
+                    style={{ backgroundColor: 'var(--color-accent-dim)' }}
+                  >
+                    <span className="text-accent"><CheckIcon /></span>
+                    <span className="text-body text-text-primary font-medium">{row.right}</span>
                   </div>
-                </div>
-              ))}
-            </div>
+                </motion.div>
+              )
+            })}
           </motion.div>
         </div>
       </div>

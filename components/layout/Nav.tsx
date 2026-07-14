@@ -149,11 +149,11 @@ export function Nav() {
           {/* ── Right side: Early access + Slack + hamburger ────────────── */}
           <div className="flex items-center gap-lg">
 
-            {/* Early access — visible on all screen sizes */}
+            {/* Early access — visually secondary; the hero waitlist form is
+                the one primary conversion action on the page. */}
             <button
               onClick={() => setBetaOpen(true)}
-              className="flex items-center gap-2 text-body font-medium text-on-accent rounded-full px-4 py-1.5 transition-opacity duration-[110ms] hover:opacity-90"
-              style={{ backgroundColor: 'var(--color-accent)' }}
+              className="flex items-center gap-2 text-body font-medium text-text-primary rounded-full px-4 py-1.5 border border-border transition-colors duration-[110ms] hover:border-text-secondary"
             >
               Early access
             </button>

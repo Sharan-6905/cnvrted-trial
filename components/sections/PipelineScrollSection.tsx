@@ -37,7 +37,7 @@ const PIPELINE_STEPS = [
     label: 'Intent Score',
     description: 'The moment an account crosses the intent threshold, CNVRTED assigns a 0–100 score so your reps know exactly who to prioritise first.',
     example: (
-      <div className="w-full max-w-[400px] rounded-xl border p-4 flex flex-col gap-3" style={{ borderColor: 'rgba(11,107,102,0.35)', background: 'var(--color-surface-raised)' }}>
+      <div className="w-full max-w-[400px] rounded-xl border p-4 flex flex-col gap-3" style={{ borderColor: 'var(--color-accent)', background: 'var(--color-surface-raised)' }}>
         <div className="flex items-center justify-between">
           <span className="font-semibold text-text-primary">Acme Corp</span>
           <div className="flex items-center gap-2">
@@ -91,7 +91,7 @@ const PIPELINE_STEPS = [
         </span>
         <div className="flex items-center justify-between rounded-lg border border-border px-3 py-2">
           <span className="text-sm font-medium text-text-primary">Acme Corp</span>
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded" style={{ background: 'rgba(11,107,102,0.12)', color: 'var(--color-accent)' }}>Score 92</span>
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded" style={{ background: 'var(--color-accent-dim)', color: 'var(--color-accent)' }}>Score 92</span>
         </div>
       </div>
     ),
@@ -101,7 +101,7 @@ const PIPELINE_STEPS = [
     label: 'Pipeline Created',
     description: 'A new opportunity lands in your pipeline with the signal, score and summary attached — timed to exactly when they’re ready to buy.',
     example: (
-      <div className="w-full max-w-[400px] rounded-xl border p-4 flex flex-col gap-3" style={{ borderColor: 'rgba(11,107,102,0.35)', background: 'var(--color-surface-raised)' }}>
+      <div className="w-full max-w-[400px] rounded-xl border p-4 flex flex-col gap-3" style={{ borderColor: 'var(--color-accent)', background: 'var(--color-surface-raised)' }}>
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium text-text-primary">Acme Corp — New Business</span>
           <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-accent text-on-accent">OPEN</span>
@@ -145,7 +145,7 @@ export function PipelineScrollSection() {
               <button
                 key={step.id}
                 onClick={() => setActive(step.id)}
-                className="relative flex flex-1 flex-col items-center gap-3 px-2 text-center focus:outline-none group"
+                className="relative flex flex-1 min-w-0 flex-col items-center gap-3 px-2 text-center focus:outline-none group"
               >
                 <span
                   className="relative z-10 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition-colors duration-200"
@@ -181,8 +181,8 @@ export function PipelineScrollSection() {
             transition={{ duration: 0.25 }}
             className="mt-14 min-h-[45vh] rounded-2xl border p-8 md:p-16 flex flex-col md:flex-row gap-8 md:gap-16 items-center justify-center"
             style={{
-              backgroundColor: 'rgba(11,107,102,0.08)',
-              borderColor: 'rgba(11,107,102,0.25)',
+              backgroundColor: 'var(--color-accent-dim)',
+              borderColor: 'rgba(44,196,187,0.25)',
             }}
           >
             <div className="flex-1 max-w-[560px]">

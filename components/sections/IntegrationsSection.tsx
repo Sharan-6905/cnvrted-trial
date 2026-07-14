@@ -192,7 +192,7 @@ export function IntegrationsSection() {
                   <>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={`https://cdn.simpleicons.org/${tool.slug}/f5f5f5`}
+                      src={`https://cdn.simpleicons.org/${tool.slug}${tool.slug === 'hubspot' ? '/ff7a59' : '/f5f5f5'}`}
                       alt=""
                       width={24}
                       height={24}

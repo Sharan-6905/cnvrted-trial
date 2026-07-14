@@ -71,7 +71,10 @@ export function InteractiveDemoSection() {
           </Button>
         </form>
 
-        <p className="text-caption text-text-tertiary">{INTERACTIVE_DEMO.disclaimer}</p>
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-caption font-medium text-text-secondary">
+          <SignalMark size={10} className="text-text-tertiary" />
+          {INTERACTIVE_DEMO.disclaimer}
+        </span>
 
         <div className="w-full min-h-[1px]">
           {loading && (
