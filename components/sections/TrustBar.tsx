@@ -4,7 +4,7 @@ import { TRUST_BAR } from '@/content/copy'
 export function TrustBar() {
   return (
     <section aria-label="Built for revenue teams" className="border-y border-border bg-surface py-6">
-      <div className="mx-auto max-w-[1280px] px-6 md:px-10 lg:px-20">
+      <div className="mx-auto w-full px-[5%]">
         <div className="flex flex-col items-center gap-4">
           <p className="text-caption font-mono text-text-tertiary uppercase tracking-[0.08em]">
             {TRUST_BAR.label}

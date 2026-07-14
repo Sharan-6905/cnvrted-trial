@@ -1,11 +1,11 @@
 import type { ElementType, ReactNode, ComponentPropsWithoutRef } from 'react'
 
 /**
- * Container — max-width + horizontal margin wrapper used by every section.
+ * Container — fluid horizontal margin wrapper used by every section.
  *
- * Enforces the layout grid from docs/04-design-system.md §4.2:
- *   - Max content width: 1280px
- *   - Outer horizontal margin: 80px desktop → 24px mobile
+ * Margins scale with the viewport instead of capping out at a fixed
+ * max-width, so content keeps using the available width on large screens:
+ *   - Outer horizontal margin: 5% of viewport width on each side
  *   - Centered: mx-auto
  *
  * The `as` prop allows rendering as any HTML element (div, section, header, footer, nav)
@@ -36,11 +36,8 @@ export function Container<T extends ElementType = 'div'>({
       className={[
         'mx-auto',
         'w-full',
-        'max-w-[1280px]',
-        // Horizontal padding: 80px (5rem) on desktop, 24px (1.5rem) on mobile
-        'px-6',        // mobile: 24px
-        'md:px-10',    // ≥768px: 40px (intermediate)
-        'lg:px-20',    // ≥1024px: 80px (full desktop spec)
+        // Fluid horizontal padding: 5% of viewport width each side
+        'px-[5%]',
         className,
       ]
         .filter(Boolean)

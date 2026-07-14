@@ -163,7 +163,7 @@ export function IntegrationsSection() {
       aria-label="Integrations"
       className="bg-surface border-y border-border py-16 md:py-20"
     >
-      <div className="mx-auto max-w-[1280px] px-6 md:px-10 lg:px-20">
+      <div className="mx-auto w-full px-[5%]">
         <div className="flex flex-col items-center gap-8 text-center">
           <p className="text-caption font-mono text-text-tertiary uppercase tracking-[0.08em]">
             {INTEGRATIONS.label}

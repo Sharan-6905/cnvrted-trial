@@ -65,7 +65,7 @@ export function IntentCardsSection() {
       aria-label="Intent signal examples"
       className="bg-background py-20 md:py-28"
     >
-      <div className="mx-auto max-w-[1280px] px-6 md:px-10 lg:px-20">
+      <div className="mx-auto w-full px-[5%]">
 
         {/* Header row */}
         <div className="flex flex-col items-center text-center gap-4 mb-10 md:mb-12">

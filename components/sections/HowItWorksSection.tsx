@@ -17,7 +17,7 @@ export function HowItWorksSection() {
       className="bg-background py-20 md:py-28"
       aria-label="How it works"
     >
-      <div className="mx-auto max-w-[1280px] px-6 md:px-10 lg:px-20">
+      <div className="mx-auto w-full px-[5%]">
 
         {/* Header */}
         <div className="mb-14 md:mb-16 text-center">

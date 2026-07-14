@@ -48,7 +48,7 @@ export function ClosingCTASection() {
       aria-label="Join the waitlist"
       className="bg-background py-20 md:py-28 border-t border-border"
     >
-      <div className="mx-auto max-w-[1280px] px-6 md:px-10 lg:px-20">
+      <div className="mx-auto w-full px-[5%]">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
 
           {/* Left: headline */}

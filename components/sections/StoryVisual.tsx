@@ -46,11 +46,12 @@ interface SourceCardProps {
   source: (typeof SOURCES)[number]
   convergeT: MotionValue<number>
   reducedMotion: boolean
+  posScale: number
 }
 
-function SourceCard({ source, convergeT, reducedMotion }: SourceCardProps) {
-  const x = useTransform(convergeT, (t) => (reducedMotion ? 0 : source.dx * (1 - t)))
-  const y = useTransform(convergeT, (t) => (reducedMotion ? 0 : source.dy * (1 - t)))
+function SourceCard({ source, convergeT, reducedMotion, posScale }: SourceCardProps) {
+  const x = useTransform(convergeT, (t) => (reducedMotion ? 0 : source.dx * posScale * (1 - t)))
+  const y = useTransform(convergeT, (t) => (reducedMotion ? 0 : source.dy * posScale * (1 - t)))
   const opacity = useTransform(convergeT, [0, 0.75, 1], [1, 1, 0])
 
   return (
@@ -136,10 +137,16 @@ function ConnectingLine({ source, convergeT }: ConnectingLineProps) {
 
 interface StoryVisualProps {
   className?: string
+  // compact = shrink the scatter radius, speed up the loop, and drop the
+  // connecting lines so the whole sequence fits a small box beside the hero.
+  compact?: boolean
 }
 
-export function StoryVisual({ className = '' }: StoryVisualProps) {
+export function StoryVisual({ className = '', compact = false }: StoryVisualProps) {
   const reducedMotion = useMotionPreference()
+
+  const posScale = compact ? 0.4 : 1
+  const loopDuration = compact ? 5 : 11
 
   // Self-looping progress: 0 -> 1 continuously, no pause at either end — the
   // profile card is already on screen for several seconds before the loop
@@ -148,13 +155,13 @@ export function StoryVisual({ className = '' }: StoryVisualProps) {
   useEffect(() => {
     if (reducedMotion) return
     const controls = animate(progress, [0, 1], {
-      duration: 11,
+      duration: loopDuration,
       ease: 'easeInOut',
       repeat: Infinity,
       repeatType: 'loop',
     })
     return () => controls.stop()
-  }, [progress, reducedMotion])
+  }, [progress, reducedMotion, loopDuration])
 
   // ── Chapter progress values, all derived from the single loop input ──
   const convergeT = useTransform(progress, [0, 0.45], [0, 1], { clamp: true })
@@ -188,12 +195,12 @@ export function StoryVisual({ className = '' }: StoryVisualProps) {
       {/* ── Chapter 1–2: scattered sources converging on the AI node ── */}
       <div className="pointer-events-none absolute inset-0">
         <svg className="absolute inset-0 h-full w-full" viewBox="0 0 900 900" preserveAspectRatio="xMidYMid slice">
-          {!staticFinal &&
+          {!staticFinal && !compact &&
             SOURCES.map((s) => <ConnectingLine key={s.key} source={s} convergeT={convergeT} />)}
         </svg>
 
         {!staticFinal &&
-          SOURCES.map((s) => <SourceCard key={s.key} source={s} convergeT={convergeT} reducedMotion={false} />)}
+          SOURCES.map((s) => <SourceCard key={s.key} source={s} convergeT={convergeT} reducedMotion={false} posScale={posScale} />)}
 
         {/* AI node — always centered */}
         <motion.div
@@ -225,8 +232,8 @@ export function StoryVisual({ className = '' }: StoryVisualProps) {
         style={{ opacity: staticFinal ? 1 : cardZoneOpacity }}
       >
         <div
-          className="flex w-full max-w-[380px] flex-col gap-2.5 rounded-lg border p-4"
-          style={{ borderColor: 'var(--color-accent)', backgroundColor: 'var(--color-surface-raised)' }}
+          className="flex w-full flex-col gap-2.5 rounded-lg border p-4"
+          style={{ maxWidth: compact ? 300 : 380, borderColor: 'var(--color-accent)', backgroundColor: 'var(--color-surface-raised)' }}
         >
           <div className="flex items-center justify-between border-b border-border pb-2.5">
             <p className="text-body font-semibold text-text-primary">{HERO.visualCompanyName}</p>

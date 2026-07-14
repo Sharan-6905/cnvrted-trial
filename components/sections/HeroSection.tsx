@@ -6,7 +6,6 @@ import { Container } from '@/components/layout/Container'
 import { SectionLabel } from '@/components/ui/SectionLabel'
 import { Button } from '@/components/ui/Button'
 import { StoryVisual } from '@/components/sections/StoryVisual'
-import { PipelineScrollSection } from '@/components/sections/PipelineScrollSection'
 import { HERO, CLOSING_CTA } from '@/content/copy'
 import { DURATION, EASE } from '@/lib/tokens'
 import { formSuccess } from '@/lib/motion'
@@ -180,23 +179,20 @@ function SuccessState() {
 }
 
 // ─── HeroSection ──────────────────────────────────────────────────────────────
-// The full-page story visual loops continuously on its own (no scroll-jack).
-// The headline, subhead, and waitlist form sit in a normal section below it.
+// Headline, subhead, and waitlist form render immediately in the first viewport —
+// no scroll-jack, no animation gate. A compact, fast auto-looping scan visual
+// sits beside the text (below it on mobile). The pipeline timeline lives in its
+// own normal section further down the page (see PipelineScrollSection in page.tsx).
 
 export function HeroSection() {
   const [submitted, setSubmitted] = useState(false)
 
   return (
-    <>
-      <section aria-label="Product story" className="relative h-[100svh] w-full overflow-hidden bg-background">
-        <StoryVisual className="h-full w-full" />
-      </section>
-
-      <PipelineScrollSection />
-
-      <section aria-label="Hero" className="relative bg-background py-6xl">
-        <Container className="w-full">
-          <div className="mx-auto flex max-w-[720px] flex-col items-center gap-xl text-center">
+    <section aria-label="Hero" className="relative bg-background pt-32 pb-5xl md:pt-36">
+      <Container className="w-full">
+        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+          {/* Text + waitlist — visible immediately, zero interaction required */}
+          <div className="flex flex-col items-start gap-xl">
             <SectionLabel>{HERO.eyebrow}</SectionLabel>
 
             <h1
@@ -207,7 +203,7 @@ export function HeroSection() {
               {HERO.headline}
             </h1>
 
-            <p className="text-body-lg text-text-secondary leading-relaxed max-w-[560px]">
+            <p className="text-body-lg text-text-secondary leading-relaxed max-w-[520px]">
               {HERO.subheadline}
             </p>
 
@@ -227,8 +223,13 @@ export function HeroSection() {
               </AnimatePresence>
             </div>
           </div>
-        </Container>
-      </section>
-    </>
+
+          {/* Compact auto-looping scan visual — sources converging into a signal */}
+          <div className="relative h-[340px] w-full overflow-hidden rounded-2xl border border-border bg-surface md:h-[440px]">
+            <StoryVisual compact className="h-full w-full" />
+          </div>
+        </div>
+      </Container>
+    </section>
   )
 }

@@ -1,17 +1,13 @@
 'use client'
 
-import { useRef, useState } from 'react'
-import { motion, useScroll, useTransform, useMotionValueEvent, type MotionValue } from 'framer-motion'
-import { useMotionPreference } from '@/components/providers/MotionProvider'
+import { useState } from 'react'
+import { motion } from 'framer-motion'
 
 /**
- * The pipeline payoff (Score → Summary → Outreach → CRM → Pipeline Created),
- * as its own scroll-scrubbed section: the card stays pinned while the user
- * scrolls through a tall wrapper, and each step lights up in turn as they
- * scroll — not on a timer. Sits below the auto-looping hero story.
+ * The pipeline payoff (Score → Summary → Outreach → CRM → Pipeline Created)
+ * as a clickable horizontal timeline: each node explains that step and shows
+ * a concrete example below — matching the FlowchartSection interaction.
  */
-
-const PIPELINE_STEPS = ['Intent Score', 'AI Summary', 'Personalized Outreach', 'CRM', 'Pipeline Created'] as const
 
 function SalesforceMark() {
   return (
@@ -35,78 +31,174 @@ function HubSpotMark() {
   )
 }
 
-interface PipelineStepRowProps {
-  step: (typeof PIPELINE_STEPS)[number]
-  index: number
-  pipelineT: MotionValue<number>
-  staticFinal: boolean
-}
-
-function PipelineStepRow({ step, index, pipelineT, staticFinal }: PipelineStepRowProps) {
-  const stepActive = useTransform(pipelineT, (t) => t >= (index + 0.5) / PIPELINE_STEPS.length)
-  const [active, setActive] = useState(staticFinal)
-  useMotionValueEvent(stepActive, 'change', (v) => {
-    if (!staticFinal) setActive(v)
-  })
-
-  const isActive = staticFinal || active
-
-  return (
-    <div className="relative flex flex-1 flex-col items-center gap-3 px-2 text-center">
-      <span
-        className="relative z-10 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition-colors duration-300"
-        style={{
-          borderColor: isActive ? 'var(--color-accent)' : 'var(--color-border)',
-          backgroundColor: isActive ? 'var(--color-accent)' : 'var(--color-surface-raised)',
-        }}
-      />
-      <span
-        className="flex flex-col items-center gap-1.5 text-body font-medium transition-colors duration-300"
-        style={{ color: isActive ? 'var(--color-text-primary)' : 'var(--color-text-tertiary)' }}
-      >
-        {step === 'CRM' && (
-          <span className="flex items-center gap-1.5">
-            <SalesforceMark />
-            <HubSpotMark />
-          </span>
-        )}
-        {step}
-      </span>
-    </div>
-  )
-}
+const PIPELINE_STEPS = [
+  {
+    id: 'score',
+    label: 'Intent Score',
+    description: 'The moment an account crosses the intent threshold, CNVRTED assigns a 0–100 score so your reps know exactly who to prioritise first.',
+    example: (
+      <div className="w-full max-w-[400px] rounded-xl border p-4 flex flex-col gap-3" style={{ borderColor: 'rgba(11,107,102,0.35)', background: 'var(--color-surface-raised)' }}>
+        <div className="flex items-center justify-between">
+          <span className="font-semibold text-text-primary">Acme Corp</span>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-accent text-on-accent">HIGH INTENT</span>
+            <span className="text-2xl font-bold tabular-nums text-text-primary">92</span>
+          </div>
+        </div>
+        <div className="h-1.5 w-full rounded-full overflow-hidden" style={{ background: 'var(--color-border)' }}>
+          <div className="h-full rounded-full bg-accent" style={{ width: '92%' }} />
+        </div>
+      </div>
+    ),
+  },
+  {
+    id: 'summary',
+    label: 'AI Summary',
+    description: 'CNVRTED writes a plain-English summary of why the account is in-market right now — no digging through a dozen browser tabs.',
+    example: (
+      <div className="w-full max-w-[400px] rounded-xl border border-border bg-surface-raised p-4 flex flex-col gap-2">
+        <p className="text-[10px] font-mono uppercase tracking-widest text-text-tertiary">AI summary</p>
+        <p className="text-sm text-text-secondary leading-relaxed">
+          Acme Corp just raised a $25M Series B and opened 12 sales roles — they’re scaling GTM and likely evaluating tooling now.
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: 'outreach',
+    label: 'Personalized Outreach',
+    description: 'A ready-to-send outreach draft is generated, tailored to the exact signal that flagged the account in the first place.',
+    example: (
+      <div className="w-full max-w-[400px] rounded-xl border border-border bg-surface-raised p-4 flex flex-col gap-2">
+        <p className="text-[10px] font-mono uppercase tracking-widest text-text-tertiary">Draft outreach</p>
+        <p className="text-xs text-text-tertiary">Subject: Scaling outbound after your Series B?</p>
+        <p className="text-sm text-text-secondary leading-relaxed">
+          “Hi Sarah — congrats on the raise. Saw you’re hiring 12 AEs; happy to share how teams your size ramp pipeline fast…”
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: 'crm',
+    label: 'CRM',
+    description: 'The account and all of its context sync straight into Salesforce or HubSpot — right where your team already works.',
+    example: (
+      <div className="w-full max-w-[400px] rounded-xl border border-border bg-surface-raised p-4 flex flex-col gap-3">
+        <span className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-text-tertiary">
+          <SalesforceMark />
+          <HubSpotMark />
+          Synced
+        </span>
+        <div className="flex items-center justify-between rounded-lg border border-border px-3 py-2">
+          <span className="text-sm font-medium text-text-primary">Acme Corp</span>
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded" style={{ background: 'rgba(11,107,102,0.12)', color: 'var(--color-accent)' }}>Score 92</span>
+        </div>
+      </div>
+    ),
+  },
+  {
+    id: 'pipeline',
+    label: 'Pipeline Created',
+    description: 'A new opportunity lands in your pipeline with the signal, score and summary attached — timed to exactly when they’re ready to buy.',
+    example: (
+      <div className="w-full max-w-[400px] rounded-xl border p-4 flex flex-col gap-3" style={{ borderColor: 'rgba(11,107,102,0.35)', background: 'var(--color-surface-raised)' }}>
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium text-text-primary">Acme Corp — New Business</span>
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-accent text-on-accent">OPEN</span>
+        </div>
+        <div className="flex justify-between text-[11px] text-text-tertiary">
+          <span>Stage: Discovery</span>
+          <span>Owner: You</span>
+          <span>$48k ARR</span>
+        </div>
+      </div>
+    ),
+  },
+] as const
 
 export function PipelineScrollSection() {
-  const reducedMotion = useMotionPreference()
-  const sectionRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end end'] })
-  const lineScale = useTransform(scrollYProgress, [0.05, 0.95], [0, 1])
-
-  if (reducedMotion) {
-    return (
-      <section aria-label="From score to pipeline" className="relative bg-background py-5xl">
-        <div className="relative mx-auto flex w-full items-start px-6 md:px-16 lg:px-32 xl:px-48">
-          <div className="absolute left-6 right-6 top-2 h-px bg-border md:left-16 md:right-16 lg:left-32 lg:right-32 xl:left-48 xl:right-48" />
-          {PIPELINE_STEPS.map((step, i) => (
-            <PipelineStepRow key={step} step={step} index={i} pipelineT={scrollYProgress} staticFinal />
-          ))}
-        </div>
-      </section>
-    )
-  }
+  const [active, setActive] = useState<string>('score')
+  const activeStep = PIPELINE_STEPS.find((s) => s.id === active)
 
   return (
-    <section ref={sectionRef} aria-label="From score to pipeline" className="relative h-[250vh]">
-      <div className="sticky top-0 flex h-[100svh] w-full items-center justify-center overflow-hidden bg-background">
-        <div className="relative mx-auto flex w-full items-start px-6 md:px-16 lg:px-32 xl:px-48">
-          <div className="absolute left-6 right-6 top-2 h-px bg-border md:left-16 md:right-16 lg:left-32 lg:right-32 xl:left-48 xl:right-48">
-            <motion.div className="h-full origin-left bg-accent" style={{ width: '100%', scaleX: lineScale }} />
-          </div>
+    <section aria-label="From score to pipeline" className="relative bg-background py-20 md:py-28">
+      <div className="mx-auto w-full px-[5%]">
 
-          {PIPELINE_STEPS.map((step, i) => (
-            <PipelineStepRow key={step} step={step} index={i} pipelineT={scrollYProgress} staticFinal={false} />
-          ))}
+        {/* Header */}
+        <div className="text-center mb-16">
+          <p className="text-caption font-mono text-text-tertiary uppercase tracking-[0.08em] mb-3">
+            AFTER THE SIGNAL
+          </p>
+          <h2 className="text-h2 text-text-primary font-semibold">
+            From score to closed pipeline.
+          </h2>
         </div>
+
+        {/* Timeline of clickable nodes */}
+        <div className="relative flex items-start">
+          {/* Connecting line behind the nodes */}
+          <div className="absolute left-0 right-0 top-2 h-px bg-border" aria-hidden="true" />
+
+          {PIPELINE_STEPS.map((step) => {
+            const isActive = active === step.id
+            return (
+              <button
+                key={step.id}
+                onClick={() => setActive(step.id)}
+                className="relative flex flex-1 flex-col items-center gap-3 px-2 text-center focus:outline-none group"
+              >
+                <span
+                  className="relative z-10 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition-colors duration-200"
+                  style={{
+                    borderColor: isActive ? 'var(--color-accent)' : 'var(--color-border)',
+                    backgroundColor: isActive ? 'var(--color-accent)' : 'var(--color-surface-raised)',
+                  }}
+                />
+                <span
+                  className="flex flex-col items-center gap-1.5 text-body font-medium transition-colors duration-200 group-hover:text-text-primary"
+                  style={{ color: isActive ? 'var(--color-text-primary)' : 'var(--color-text-tertiary)' }}
+                >
+                  {step.label === 'CRM' && (
+                    <span className="flex items-center gap-1.5">
+                      <SalesforceMark />
+                      <HubSpotMark />
+                    </span>
+                  )}
+                  {step.label}
+                </span>
+              </button>
+            )
+          })}
+        </div>
+
+        {/* Detail panel — fills the section for the active step. Keyed so it
+            re-plays its entrance each time a different step is selected. */}
+        {activeStep && (
+          <motion.div
+            key={activeStep.id}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.25 }}
+            className="mt-14 min-h-[45vh] rounded-2xl border p-8 md:p-16 flex flex-col md:flex-row gap-8 md:gap-16 items-center justify-center"
+            style={{
+              backgroundColor: 'rgba(11,107,102,0.08)',
+              borderColor: 'rgba(11,107,102,0.25)',
+            }}
+          >
+            <div className="flex-1 max-w-[560px]">
+              <p className="text-h2 font-semibold text-text-primary mb-6">{activeStep.label}</p>
+              <p className="text-body-lg text-text-secondary leading-relaxed">{activeStep.description}</p>
+            </div>
+
+            {/* Concrete example for this step */}
+            <div className="flex-shrink-0 flex flex-col gap-2">
+              <p className="text-caption font-mono uppercase tracking-widest text-text-tertiary" style={{ fontSize: 10 }}>
+                Example
+              </p>
+              {activeStep.example}
+            </div>
+          </motion.div>
+        )}
       </div>
     </section>
   )

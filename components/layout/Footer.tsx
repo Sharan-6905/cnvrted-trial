@@ -41,7 +41,7 @@ export function Footer() {
       role="contentinfo"
     >
       {/* Top bar */}
-      <div className="mx-auto max-w-[1280px] px-6 md:px-10 lg:px-20 py-6 border-b border-border">
+      <div className="mx-auto w-full px-[5%] py-6 border-b border-border">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 
           {/* Social links */}
