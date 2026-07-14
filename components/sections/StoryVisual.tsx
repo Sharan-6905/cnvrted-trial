@@ -2,35 +2,20 @@
 
 import { useEffect, useState } from 'react'
 import { motion, useTransform, useMotionValueEvent, useMotionValue, animate, type MotionValue } from 'framer-motion'
+import { LinkedinLogo, RedditLogo, Briefcase, CurrencyDollar, Globe, ChartLineUp } from '@phosphor-icons/react'
 import { HERO } from '@/content/copy'
 import { useMotionPreference } from '@/components/providers/MotionProvider'
 import { AiOrbMark } from '@/components/ui/AiOrbMark'
 
-/**
- * The hero's full-page visual: a single self-looping sequence, not four
- * separate animations. `progress` (0→1) drives every chapter via useTransform,
- * so the whole story is a pure function of one number — only now that number
- * animates on its own timeline (0→1, pause, repeat) instead of scroll.
- *
- * Chapter map (all driven by the same `progress` MotionValue):
- *   0.00–0.00  Noise — 7 sources scattered, idle-floating, unconnected (rest state)
- *   0.00–0.45  Convergence — sources travel to center, merge into the AI node
- *   0.45–1.00  Profile — enriched fields stagger in, Intent Score counts up
- *
- * The pipeline chapter (Score → Summary → Outreach → CRM → Pipeline Created)
- * used to live here as a fourth, timer-driven beat. It's now its own
- * scroll-scrubbed section (PipelineScrollSection) further down the page —
- * that flow reads better tied to the user's scroll than to a timer.
- */
+// ── Configuration ─────────────────────────────────────────────────────────────
 
 const SOURCES = [
-  { key: 'linkedin', label: 'LinkedIn', dx: -380, dy: -230 },
-  { key: 'funding', label: 'Funding News', dx: 90, dy: -320 },
-  { key: 'reddit', label: 'Reddit', dx: 390, dy: -120 },
-  { key: 'jobs', label: 'Job Boards', dx: -410, dy: 80 },
-  { key: 'website', label: 'Company Websites', dx: 70, dy: 310 },
-  { key: 'techchange', label: 'Technology Changes', dx: 410, dy: 175 },
-  { key: 'glassdoor', label: 'Glassdoor', dx: -100, dy: 330 },
+  { key: 'linkedin', label: 'LinkedIn', icon: LinkedinLogo, angle: -45, distance: 220 },
+  { key: 'reddit', label: 'Reddit', icon: RedditLogo, angle: -140, distance: 180 },
+  { key: 'jobs', label: 'Job Boards', icon: Briefcase, angle: 135, distance: 250 },
+  { key: 'funding', label: 'Funding', icon: CurrencyDollar, angle: 45, distance: 280 },
+  { key: 'website', label: 'Websites', icon: Globe, angle: -200, distance: 210 },
+  { key: 'signals', label: 'Tech Intent', icon: ChartLineUp, angle: 210, distance: 270 },
 ] as const
 
 const PROFILE_FIELDS = [
@@ -42,222 +27,221 @@ const PROFILE_FIELDS = [
   { label: 'Leadership', value: 'New VP Sales' },
 ] as const
 
-interface SourceCardProps {
-  source: (typeof SOURCES)[number]
-  convergeT: MotionValue<number>
-  reducedMotion: boolean
-  posScale: number
+const degToRad = (deg: number) => (deg * Math.PI) / 180
+const getCoords = (angle: number, distance: number) => ({
+  x: Math.cos(degToRad(angle)) * distance,
+  y: Math.sin(degToRad(angle)) * distance,
+})
+
+// ── Components ────────────────────────────────────────────────────────────────
+
+function RadarGrid() {
+  return (
+    <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-[0.07]">
+      <div className="absolute h-[250px] w-[250px] rounded-full border border-white" />
+      <div className="absolute h-[450px] w-[450px] rounded-full border border-white" />
+      <div className="absolute h-[650px] w-[650px] rounded-full border border-white border-dashed" />
+      <div className="absolute h-full w-[1px] bg-white" />
+      <div className="absolute h-[1px] w-full bg-white" />
+      {/* Radar sweep */}
+      <motion.div
+        className="absolute h-[650px] w-[650px] rounded-full"
+        style={{
+          background: 'conic-gradient(from 0deg, transparent 70%, rgba(255,255,255,0.4) 100%)',
+        }}
+        animate={{ rotate: 360 }}
+        transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+      />
+    </div>
+  )
 }
 
-function SourceCard({ source, convergeT, reducedMotion, posScale }: SourceCardProps) {
-  const x = useTransform(convergeT, (t) => (reducedMotion ? 0 : source.dx * posScale * (1 - t)))
-  const y = useTransform(convergeT, (t) => (reducedMotion ? 0 : source.dy * posScale * (1 - t)))
-  const opacity = useTransform(convergeT, [0, 0.75, 1], [1, 1, 0])
+function SourceNode({ source, progress, index }: { source: typeof SOURCES[number]; progress: MotionValue; index: number }) {
+  const { x, y } = getCoords(source.angle, source.distance)
+  
+  // Stagger entry
+  const start = index * 0.05
+  const end = start + 0.1
+  const opacity = useTransform(progress, [start, end, 0.4, 0.45], [0, 1, 1, 0])
+  const scale = useTransform(progress, [start, end], [0.5, 1])
+  
+  // Beam line
+  const beamProgress = useTransform(progress, [end, end + 0.15], [0, 1])
+  const beamOpacity = useTransform(progress, [end, end + 0.15, 0.4, 0.45], [0, 1, 1, 0])
+
+  const Icon = source.icon
+
+  return (
+    <>
+      <motion.div
+        className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-2"
+        style={{ x, y, opacity, scale }}
+      >
+        <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/60 shadow-[0_0_15px_rgba(255,255,255,0.1)] backdrop-blur-md">
+          <Icon weight="fill" className="h-5 w-5 text-white/90" />
+        </div>
+        <span className="rounded border border-white/10 bg-black/40 px-2 py-0.5 text-[10px] font-mono uppercase tracking-widest text-white/70 backdrop-blur-sm">
+          {source.label}
+        </span>
+      </motion.div>
+
+      {/* Beam drawing to center */}
+      <svg className="pointer-events-none absolute left-1/2 top-1/2 overflow-visible">
+        <motion.line
+          x1={x} y1={y} x2={0} y2={0}
+          stroke="rgba(255,255,255,0.6)"
+          strokeWidth="1.5"
+          strokeDasharray="4 4"
+          style={{
+            pathLength: beamProgress,
+            opacity: beamOpacity,
+          }}
+        />
+      </svg>
+    </>
+  )
+}
+
+function CentralCore({ progress }: { progress: MotionValue }) {
+  const scale = useTransform(progress, [0, 0.4, 0.45, 0.5, 0.9], [1, 1, 1.3, 1, 1])
+  const rotate = useTransform(progress, [0, 1], [0, 180])
 
   return (
     <motion.div
-      style={{
-        position: 'absolute',
-        left: '50%',
-        top: '50%',
-        marginLeft: -72,
-        marginTop: -16,
-        x,
-        y,
-        opacity: reducedMotion ? 0 : opacity,
-      }}
-      className="flex items-center gap-1.5 rounded-full border px-2.5 py-1.5"
-      // Idle float — independent of scroll, applied to a nested layer so it
-      // never fights the scroll-driven x/y translate above.
+      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+      style={{ scale }}
     >
-      <motion.div
-        className="flex items-center gap-1.5"
-        animate={reducedMotion ? undefined : { y: [0, -4, 0] }}
-        transition={{ duration: 3 + (source.dx % 5) * 0.2, repeat: Infinity, ease: 'easeInOut' }}
-        style={{
-          border: '1px solid var(--color-border)',
-          borderRadius: 9999,
-          padding: '6px 10px',
-          background: 'var(--color-surface-raised)',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 6,
-          whiteSpace: 'nowrap',
-        }}
-      >
-        <span
-          className="h-1.5 w-1.5 shrink-0 rounded-full"
-          style={{ background: 'var(--color-accent)' }}
-        />
-        <span className="text-[10px] font-medium text-text-secondary">{source.label}</span>
+      <motion.div style={{ rotate }} className="relative flex items-center justify-center">
+        {/* Outer tech rings */}
+        <div className="absolute h-36 w-36 rounded-full border border-white/10 border-t-white/80" />
+        <div className="absolute h-28 w-28 rounded-full border border-white/5 border-b-white/50" />
+        
+        <div className="flex h-[90px] w-[90px] items-center justify-center rounded-full bg-black shadow-[0_0_40px_rgba(255,255,255,0.15)] border border-white/20 backdrop-blur-xl">
+          <AiOrbMark size={64} />
+        </div>
+      </motion.div>
+      <motion.div className="mt-5 text-center font-mono text-[11px] tracking-[0.2em] text-white/50">
+        CNVRTED AI
       </motion.div>
     </motion.div>
   )
 }
 
-interface ProfileFieldRowProps {
-  field: (typeof PROFILE_FIELDS)[number]
-  index: number
-  profileT: MotionValue<number>
-  staticFinal: boolean
-}
+function EnrichedProfile({ progress, reducedMotion }: { progress: MotionValue; reducedMotion: boolean }) {
+  const y = useTransform(progress, [0.45, 0.55], [40, 0])
+  const opacity = useTransform(progress, [0.45, 0.55, 0.9, 0.95], [0, 1, 1, 0])
+  const rotateX = useTransform(progress, [0.45, 0.55], [15, 0])
 
-function ProfileFieldRow({ field, index, profileT, staticFinal }: ProfileFieldRowProps) {
-  const opacity = useTransform(profileT, [0.15 + index * 0.09, 0.24 + index * 0.09], [0, 1])
+  const scoreOpacity = useTransform(progress, [0.65, 0.7], [0, 1])
+  const scoreMV = useTransform(progress, [0.7, 0.85], [0, 92])
+  const [score, setScore] = useState(0)
+  
+  useMotionValueEvent(scoreMV, 'change', (v) => setScore(Math.round(v)))
+
+  const isFinalState = reducedMotion
+
   return (
     <motion.div
-      className="flex items-center justify-between"
-      style={{ opacity: staticFinal ? 1 : opacity }}
+      className="absolute left-1/2 top-1/2 z-30 w-full max-w-[380px] -translate-x-1/2 -translate-y-1/2"
+      style={{ y: isFinalState ? 0 : y, opacity: isFinalState ? 1 : opacity, rotateX: isFinalState ? 0 : rotateX, perspective: 1200 }}
     >
-      <span className="text-[10px] text-text-tertiary">{field.label}</span>
-      <span className="text-[11px] font-medium text-text-secondary">{field.value}</span>
+      <div className="relative overflow-hidden rounded-xl border border-white/20 bg-black/70 p-6 shadow-2xl backdrop-blur-2xl">
+        {/* Scanning laser line */}
+        {!isFinalState && (
+          <motion.div
+            className="absolute left-0 top-0 h-[1px] w-full bg-gradient-to-r from-transparent via-white to-transparent opacity-60 shadow-[0_0_15px_rgba(255,255,255,0.8)]"
+            animate={{ top: ['0%', '100%'] }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: 'linear' }}
+          />
+        )}
+
+        {/* Ambient glow inside card */}
+        <div className="pointer-events-none absolute -inset-20 bg-[radial-gradient(ellipse_at_top_right,rgba(255,255,255,0.1),transparent_50%)]" />
+
+        <div className="relative z-10 mb-5 flex items-center justify-between border-b border-white/10 pb-5">
+          <div>
+            <h3 className="text-xl font-bold text-white tracking-tight">{HERO.visualCompanyName}</h3>
+            <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.15em] text-white/50">Intelligence Profile</p>
+          </div>
+          <motion.div style={{ opacity: isFinalState ? 1 : scoreOpacity }} className="flex flex-col items-end">
+            <span className="rounded bg-white px-2 py-0.5 font-mono text-[10px] font-bold text-black tracking-wide">
+              HIGH INTENT
+            </span>
+            <span className="mt-1 font-mono text-3xl font-bold tabular-nums tracking-tighter text-white">
+              {isFinalState ? 92 : score}
+            </span>
+          </motion.div>
+        </div>
+
+        <div className="relative z-10 space-y-3.5">
+          {PROFILE_FIELDS.map((field, i) => {
+            const fieldStart = 0.55 + i * 0.04
+            const fieldOpacity = useTransform(progress, [fieldStart, fieldStart + 0.05], [0, 1])
+            const fieldX = useTransform(progress, [fieldStart, fieldStart + 0.05], [-15, 0])
+            
+            return (
+              <motion.div 
+                key={field.label} 
+                style={{ opacity: isFinalState ? 1 : fieldOpacity, x: isFinalState ? 0 : fieldX }} 
+                className="flex justify-between border-b border-white/5 pb-2.5"
+              >
+                <span className="font-mono text-[11px] uppercase tracking-wider text-white/40">{field.label}</span>
+                <span className="text-[14px] font-medium text-white/95">{field.value}</span>
+              </motion.div>
+            )
+          })}
+        </div>
+      </div>
     </motion.div>
   )
 }
 
-interface ConnectingLineProps {
-  source: (typeof SOURCES)[number]
-  convergeT: MotionValue<number>
-}
+// ── Main Export ───────────────────────────────────────────────────────────────
 
-function ConnectingLine({ source, convergeT }: ConnectingLineProps) {
-  const opacity = useTransform(convergeT, [0.15, 0.55, 0.85], [0, 0.35, 0])
-  return (
-    <motion.line
-      x1={450 + source.dx}
-      y1={450 + source.dy}
-      x2={450}
-      y2={450}
-      stroke="var(--color-accent)"
-      strokeWidth="1"
-      style={{ opacity }}
-    />
-  )
-}
-
-interface StoryVisualProps {
+export interface StoryVisualProps {
   className?: string
-  // compact = shrink the scatter radius, speed up the loop, and drop the
-  // connecting lines so the whole sequence fits a small box beside the hero.
   compact?: boolean
 }
 
 export function StoryVisual({ className = '', compact = false }: StoryVisualProps) {
   const reducedMotion = useMotionPreference()
-
-  const posScale = compact ? 0.4 : 1
-  const loopDuration = compact ? 5 : 11
-
-  // Self-looping progress: 0 -> 1 continuously, no pause at either end — the
-  // profile card is already on screen for several seconds before the loop
-  // wraps, so there's no need for an explicit hold that would read as a stall.
+  const loopDuration = compact ? 7 : 14
   const progress = useMotionValue(0)
+
   useEffect(() => {
     if (reducedMotion) return
     const controls = animate(progress, [0, 1], {
       duration: loopDuration,
-      ease: 'easeInOut',
+      ease: 'linear',
       repeat: Infinity,
       repeatType: 'loop',
     })
     return () => controls.stop()
   }, [progress, reducedMotion, loopDuration])
 
-  // ── Chapter progress values, all derived from the single loop input ──
-  const convergeT = useTransform(progress, [0, 0.45], [0, 1], { clamp: true })
-  const profileT = useTransform(progress, [0.45, 1], [0, 1], { clamp: true })
-
-  const aiNodeOpacity = useTransform(convergeT, [0.55, 0.85], [0, 1])
-  const aiNodeScale = useTransform(convergeT, [0.55, 1], [0.7, 1])
-
-  const cardZoneOpacity = useTransform(profileT, [0, 0.08, 0.95, 1], [0, 1, 1, 0])
-  // Score badge/number stay hidden until the count-up actually starts — no
-  // bare "0" flash while the profile fields are still assembling.
-  const scoreZoneOpacity = useTransform(profileT, [0.64, 0.72], [0, 1])
-  const scoreMV = useTransform(profileT, [0.72, 0.94], [0, 92])
-  const [scoreDisplay, setScoreDisplay] = useState(0)
-  useMotionValueEvent(scoreMV, 'change', (v) => setScoreDisplay(Math.round(v)))
-
-  // Reduced motion: skip scroll-scrubbing entirely, show the resolved end-state.
-  const staticFinal = reducedMotion
+  // Center node fades out when the glass card is fully revealed
+  const bgDim = useTransform(progress, [0.4, 0.5, 0.9, 0.95], [1, 0.1, 0.1, 1])
 
   return (
-    <div
-      className={`relative w-full select-none overflow-hidden bg-background ${className}`}
-      aria-hidden="true"
-      role="presentation"
+    <div 
+      className={`relative w-full select-none overflow-hidden bg-black ${className}`} 
+      aria-hidden="true" 
     >
       <span className="sr-only">{HERO.visualDescription}</span>
-
-      {/* Ambient glow */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{ background: 'radial-gradient(ellipse at 50% 45%, var(--color-accent-dim), transparent 60%)' }}
-      />
-
-      {/* ── Chapter 1–2: scattered sources converging on the AI node ── */}
-      <div className="pointer-events-none absolute inset-0">
-        <svg className="absolute inset-0 h-full w-full" viewBox="0 0 900 900" preserveAspectRatio="xMidYMid slice">
-          {!staticFinal && !compact &&
-            SOURCES.map((s) => <ConnectingLine key={s.key} source={s} convergeT={convergeT} />)}
-        </svg>
-
-        {!staticFinal &&
-          SOURCES.map((s) => <SourceCard key={s.key} source={s} convergeT={convergeT} reducedMotion={false} posScale={posScale} />)}
-
-        {/* AI node — always centered */}
-        <motion.div
-          style={{
-            position: 'absolute',
-            left: '50%',
-            top: '50%',
-            marginLeft: -44,
-            marginTop: -44,
-            opacity: staticFinal ? 1 : aiNodeOpacity,
-            scale: staticFinal ? 1 : aiNodeScale,
-          }}
-          className="flex flex-col items-center"
-        >
-          <motion.div
-            className="flex h-[88px] w-[88px] items-center justify-center"
-            animate={staticFinal ? undefined : { rotate: 360 }}
-            transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-          >
-            <AiOrbMark size={88} />
-          </motion.div>
-          <p className="mt-3 text-[12px] font-mono uppercase tracking-widest text-text-tertiary">CNVRTED AI</p>
-        </motion.div>
-      </div>
-
-      {/* ── Chapter 3: enriched profile card ── */}
-      <motion.div
-        className="relative z-10 flex h-full items-center justify-center px-6"
-        style={{ opacity: staticFinal ? 1 : cardZoneOpacity }}
-      >
-        <div
-          className="flex w-full flex-col gap-2.5 rounded-lg border p-4"
-          style={{ maxWidth: compact ? 300 : 380, borderColor: 'var(--color-accent)', backgroundColor: 'var(--color-surface-raised)' }}
-        >
-          <div className="flex items-center justify-between border-b border-border pb-2.5">
-            <p className="text-body font-semibold text-text-primary">{HERO.visualCompanyName}</p>
-            <motion.div
-              className="flex items-center gap-1.5"
-              style={{ opacity: staticFinal ? 1 : scoreZoneOpacity }}
-            >
-              <span className="inline-flex items-center rounded-md bg-accent px-[0.5rem] py-xs text-[9px] font-mono leading-none text-on-accent">
-                HIGH INTENT
-              </span>
-              <span className="text-[1.1rem] font-bold leading-none tabular-nums text-text-primary">
-                {staticFinal ? 92 : scoreDisplay}
-              </span>
-            </motion.div>
-          </div>
-
-          {PROFILE_FIELDS.map((field, i) => (
-            <ProfileFieldRow key={field.label} field={field} index={i} profileT={profileT} staticFinal={staticFinal} />
-          ))}
-        </div>
+      
+      {/* Background sweep and rings */}
+      <RadarGrid />
+      
+      {/* Dynamic Data Gathering Phase */}
+      <motion.div style={{ opacity: reducedMotion ? 0 : bgDim }} className="absolute inset-0 z-10">
+        {SOURCES.map((source, i) => (
+          <SourceNode key={source.key} source={source} progress={progress} index={i} />
+        ))}
+        <CentralCore progress={progress} />
       </motion.div>
+
+      {/* Result Phase */}
+      <EnrichedProfile progress={progress} reducedMotion={reducedMotion} />
     </div>
   )
 }
