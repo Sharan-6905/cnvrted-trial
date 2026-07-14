@@ -64,7 +64,7 @@ export default function ContactPage() {
                     <p className="text-body font-semibold text-text-primary mb-0.5">{person.name}</p>
                     <span
                       className="text-caption font-mono uppercase tracking-widest px-2 py-0.5 rounded-full"
-                      style={{ fontSize: 10, color: '#0B6B66', backgroundColor: 'rgba(11,107,102,0.1)' }}
+                      style={{ fontSize: 10, color: 'var(--color-accent)', backgroundColor: 'var(--color-accent-dim)' }}
                     >
                       {person.role}
                     </span>

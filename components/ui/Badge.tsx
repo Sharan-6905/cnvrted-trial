@@ -21,7 +21,7 @@ const LABEL: Record<IntentLevel, string> = {
 }
 
 const COLOURS: Record<IntentLevel, string> = {
-  HIGH: 'bg-[#0B6B66] text-white',
+  HIGH: 'bg-accent text-on-accent',
   MEDIUM: 'bg-intent-medium-bg text-intent-medium-text',
 }
 

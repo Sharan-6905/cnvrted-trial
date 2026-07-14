@@ -94,7 +94,7 @@ export default function PricingPage() {
                       style={{ backgroundColor: 'rgba(11,107,102,0.12)' }}
                     >
                       <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
-                        <path d="M1.5 4L3 5.5L6.5 2" stroke="#0B6B66" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M1.5 4L3 5.5L6.5 2" stroke="var(--color-accent)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </div>
                     <span className="text-body text-text-secondary" style={{ fontSize: 14 }}>{item}</span>
@@ -102,36 +102,6 @@ export default function PricingPage() {
                 ))}
               </div>
 
-            </div>
-          </div>
-        </section>
-
-        {/* Waitlist CTA */}
-        <section className="py-20 md:py-24 border-b border-border bg-surface">
-          <div className="mx-auto max-w-[1280px] px-6 md:px-10 lg:px-20">
-            <div className="max-w-[640px] mx-auto text-center">
-              <div
-                className="inline-block text-caption font-mono uppercase tracking-widest px-3 py-1 rounded-full mb-6"
-                style={{ fontSize: 10, color: '#0B6B66', backgroundColor: 'rgba(11,107,102,0.1)' }}
-              >
-                EARLY ACCESS
-              </div>
-              <h2 className="text-h2 font-semibold text-text-primary mb-4 leading-tight">
-                Get in before we open.
-              </h2>
-              <p className="text-body text-text-secondary leading-relaxed mb-10">
-                We are onboarding teams in cohorts. Waitlist members get first access and direct onboarding — no queue, no self-serve setup.
-              </p>
-              <a
-                href="/"
-                className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-body font-semibold text-white transition-opacity duration-200 hover:opacity-90"
-                style={{ backgroundColor: '#0B6B66' }}
-              >
-                Join the waitlist
-              </a>
-              <p className="text-caption text-text-tertiary mt-4" style={{ fontSize: 12 }}>
-                No spam. We will reach out directly when access opens.
-              </p>
             </div>
           </div>
         </section>

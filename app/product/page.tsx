@@ -27,7 +27,7 @@ const FEATURES = [
     title: 'Not just a flag — a full brief',
     body: 'Each surfaced account comes with everything a rep needs to open a conversation: why the account showed up, who to reach, the signal that triggered it, and a suggested outreach angle.',
     points: ['Trigger explanation', 'Decision maker identified', 'Suggested angle', 'Company context', 'Signal timeline', 'One-line pitch'],
-    color: '#0B6B66',
+    color: 'var(--color-accent)',
   },
   {
     eyebrow: 'CRM INTEGRATION',
@@ -41,7 +41,7 @@ const FEATURES = [
 const SIGNAL_TYPES = [
   {
     tag: 'HIRING',
-    color: '#0B6B66',
+    color: 'var(--color-accent)',
     bg: 'rgba(11,107,102,0.06)',
     example: 'Posted 8 Sales Engineer roles in 10 days',
     why: 'New headcount signals budget, new initiatives, and tools to support them.',
@@ -156,8 +156,8 @@ export default function ProductPage() {
             </p>
             <a
               href="/"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-body font-semibold text-white transition-opacity duration-200 hover:opacity-90"
-              style={{ backgroundColor: '#0B6B66' }}
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-body font-semibold text-on-accent transition-opacity duration-200 hover:opacity-90"
+              style={{ backgroundColor: 'var(--color-accent)' }}
             >
               Join the waitlist
             </a>

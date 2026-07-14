@@ -17,8 +17,8 @@ interface TagProps {
 const TAG_COLOURS: Record<SignalType, string> = {
   'HIRING':      'bg-accent-dim text-accent',
   'FUNDING':     'bg-accent-dim text-accent',
-  'TECH CHANGE': 'bg-[#FEF0DC] text-[#92540A]',
-  'PAIN SIGNAL': 'bg-[#F3EEFF] text-[#6B3FA0]',
+  'TECH CHANGE': 'bg-accent-dim text-accent',
+  'PAIN SIGNAL': 'bg-accent-dim text-accent',
 }
 
 export function Tag({ type, className = '' }: TagProps) {

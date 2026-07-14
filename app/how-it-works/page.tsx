@@ -26,7 +26,7 @@ const STEPS = [
   {
     number: '02',
     label: 'Match',
-    color: '#0B6B66',
+    color: 'var(--color-accent)',
     bg: 'rgba(11,107,102,0.06)',
     border: 'rgba(11,107,102,0.2)',
     headline: 'Every signal matched to your ICP',
@@ -71,7 +71,7 @@ const STEPS = [
   {
     number: '05',
     label: 'Action',
-    color: '#0B6B66',
+    color: 'var(--color-accent)',
     bg: 'rgba(11,107,102,0.06)',
     border: 'rgba(11,107,102,0.2)',
     headline: 'Signals live where your team works',
@@ -151,23 +151,6 @@ export default function HowItWorksPage() {
             </div>
           </section>
         ))}
-
-        {/* CTA */}
-        <section className="py-24 md:py-32">
-          <div className="mx-auto max-w-[1280px] px-6 md:px-10 lg:px-20 text-center">
-            <h2 className="text-h2 font-semibold text-text-primary mb-4">See it for yourself.</h2>
-            <p className="text-body text-text-secondary mb-10 max-w-[420px] mx-auto leading-relaxed">
-              Join the waitlist and be first to access real-time buying signals for your pipeline.
-            </p>
-            <a
-              href="/"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-body font-semibold text-white transition-opacity duration-200 hover:opacity-90"
-              style={{ backgroundColor: '#0B6B66' }}
-            >
-              Join the waitlist
-            </a>
-          </div>
-        </section>
 
       </main>
       <Footer />

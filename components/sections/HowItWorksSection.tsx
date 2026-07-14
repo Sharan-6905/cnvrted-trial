@@ -7,7 +7,7 @@ import { DURATION, EASE } from '@/lib/tokens'
 
 const ICONS = [GlobeHemisphereWest, Funnel, ChartBar, Target]
 
-const STEP_COLOURS = ['#0B6B66', '#0B6B66', '#0B6B66', '#0B6B66']
+const STEP_COLOURS = ['var(--color-accent)', 'var(--color-accent)', 'var(--color-accent)', 'var(--color-accent)']
 
 export function HowItWorksSection() {
   return (
@@ -53,7 +53,7 @@ export function HowItWorksSection() {
               >
                 {/* Step number circle */}
                 <div
-                  className="w-9 h-9 rounded-full flex items-center justify-center text-body font-semibold text-white shrink-0"
+                  className="w-9 h-9 rounded-full flex items-center justify-center text-body font-semibold text-on-accent shrink-0"
                   style={{ background: STEP_COLOURS[i] }}
                 >
                   {step.number}

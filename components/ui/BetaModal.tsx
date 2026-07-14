@@ -118,7 +118,7 @@ export function BetaModal({ open, onClose }: BetaModalProps) {
             {!success ? (
               <>
                 <div className="mb-6">
-                  <p className="text-caption font-mono uppercase tracking-widest mb-2" style={{ fontSize: 10, color: '#0B6B66' }}>EARLY BETA</p>
+                  <p className="text-caption font-mono uppercase tracking-widest mb-2" style={{ fontSize: 10, color: 'var(--color-accent)' }}>EARLY BETA</p>
                   <h2 className="text-h3 font-semibold text-text-primary mb-1">Join our beta</h2>
                   <p className="text-body text-text-secondary" style={{ fontSize: 14 }}>
                     Get early access to CNVRTED. We'll reach out directly.
@@ -175,8 +175,8 @@ export function BetaModal({ open, onClose }: BetaModalProps) {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full mt-1 py-3 px-6 rounded-full font-semibold text-white transition-opacity duration-150 hover:opacity-90 disabled:opacity-50"
-                    style={{ backgroundColor: '#0B6B66' }}
+                    className="w-full mt-1 py-3 px-6 rounded-full font-semibold text-on-accent transition-opacity duration-150 hover:opacity-90 disabled:opacity-50"
+                    style={{ backgroundColor: 'var(--color-accent)' }}
                   >
                     {loading ? 'Submitting…' : 'Request beta access'}
                   </button>
@@ -188,7 +188,7 @@ export function BetaModal({ open, onClose }: BetaModalProps) {
               <div className="py-6 text-center flex flex-col items-center gap-4">
                 <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(11,107,102,0.12)' }}>
                   <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                    <path d="M4 11l5 5L18 6" stroke="#0B6B66" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M4 11l5 5L18 6" stroke="var(--color-accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
                 <div>
@@ -199,8 +199,8 @@ export function BetaModal({ open, onClose }: BetaModalProps) {
                 </div>
                 <button
                   onClick={handleClose}
-                  className="mt-2 px-6 py-2.5 rounded-full font-medium text-white"
-                  style={{ backgroundColor: '#0B6B66' }}
+                  className="mt-2 px-6 py-2.5 rounded-full font-medium text-on-accent"
+                  style={{ backgroundColor: 'var(--color-accent)' }}
                 >
                   Done
                 </button>

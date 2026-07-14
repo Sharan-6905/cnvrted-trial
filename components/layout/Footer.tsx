@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { NAV, FOOTER } from '@/content/copy'
+import { WordmarkGlow } from '@/components/ui/WordmarkGlow'
 
 export function Footer() {
   return (
@@ -31,26 +32,8 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Giant half-visible outlined wordmark */}
-      <div
-        className="relative w-full overflow-hidden select-none pointer-events-none"
-        aria-hidden="true"
-        style={{ height: 'clamp(60px, 15vw, 180px)' }}
-      >
-        <p
-          className="absolute left-1/2 whitespace-nowrap font-sans font-bold leading-none"
-          style={{
-            fontSize: 'clamp(120px, 22vw, 320px)',
-            letterSpacing: '-0.03em',
-            top: '10%',
-            transform: 'translateX(-50%)',
-            color: 'transparent',
-            WebkitTextStroke: '2px rgba(0,0,0,0.25)',
-          }}
-        >
-          {NAV.brand}
-        </p>
-      </div>
+      {/* Giant outlined wordmark with cursor-follow spotlight */}
+      <WordmarkGlow text={NAV.brand} />
     </footer>
   )
 }

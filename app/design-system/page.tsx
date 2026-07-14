@@ -424,7 +424,7 @@ export default function DesignSystemPage() {
                     {/* Hover (forced) */}
                     <div className="flex flex-col items-start gap-sm">
                       <span
-                        className="inline-flex items-center justify-center gap-2 rounded-md text-body font-medium py-3 px-6 text-white"
+                        className="inline-flex items-center justify-center gap-2 rounded-md text-body font-medium py-3 px-6 text-on-accent"
                         style={{ backgroundColor: '#2450CC' }}
                         aria-hidden="true"
                       >
@@ -436,7 +436,7 @@ export default function DesignSystemPage() {
                     {/* Focus (forced) */}
                     <div className="flex flex-col items-start gap-sm p-xs">
                       <span
-                        className="inline-flex items-center justify-center gap-2 rounded-md text-body font-medium py-3 px-6 bg-accent text-white"
+                        className="inline-flex items-center justify-center gap-2 rounded-md text-body font-medium py-3 px-6 bg-accent text-on-accent"
                         style={{ outline: '2px solid white', outlineOffset: '2px', boxShadow: '0 0 0 4px #2B5CE6' }}
                         aria-hidden="true"
                       >

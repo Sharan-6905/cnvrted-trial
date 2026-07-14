@@ -31,7 +31,7 @@ const base =
 
 const variantClasses = {
   primary:
-    'bg-accent text-white hover:bg-accent-hover active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-accent',
+    'bg-accent text-on-accent hover:bg-accent-hover active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-accent',
   ghost:
     'bg-transparent text-accent border border-accent hover:bg-accent-dim active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed',
 }

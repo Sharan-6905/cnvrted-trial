@@ -152,8 +152,8 @@ export function Nav() {
             {/* Early access — visible on all screen sizes */}
             <button
               onClick={() => setBetaOpen(true)}
-              className="flex items-center gap-2 text-body font-medium text-white rounded-full px-4 py-1.5 transition-opacity duration-[110ms] hover:opacity-90"
-              style={{ backgroundColor: '#0B6B66' }}
+              className="flex items-center gap-2 text-body font-medium text-on-accent rounded-full px-4 py-1.5 transition-opacity duration-[110ms] hover:opacity-90"
+              style={{ backgroundColor: 'var(--color-accent)' }}
             >
               Early access
             </button>

@@ -203,7 +203,7 @@ export default function Phase3PreviewPage() {
                           <span className="text-body text-text-secondary hidden sm:block">Product</span>
                           <span className="text-body text-text-secondary hidden sm:block">How it works</span>
                           <span className="text-body text-text-secondary hidden sm:block">Why CNVRTED</span>
-                          <span className="inline-flex items-center justify-center bg-accent text-white text-caption font-medium rounded-md py-[6px] px-4">
+                          <span className="inline-flex items-center justify-center bg-accent text-on-accent text-caption font-medium rounded-md py-[6px] px-4">
                             Join the waitlist
                           </span>
                         </div>
@@ -225,7 +225,7 @@ export default function Phase3PreviewPage() {
                           <span className="text-body text-text-secondary hidden sm:block">Product</span>
                           <span className="text-body text-text-secondary hidden sm:block">How it works</span>
                           <span className="text-body text-text-secondary hidden sm:block">Why CNVRTED</span>
-                          <span className="inline-flex items-center justify-center bg-accent text-white text-caption font-medium rounded-md py-[6px] px-4">
+                          <span className="inline-flex items-center justify-center bg-accent text-on-accent text-caption font-medium rounded-md py-[6px] px-4">
                             Join the waitlist
                           </span>
                         </div>
@@ -286,7 +286,7 @@ export default function Phase3PreviewPage() {
                     <div className="flex items-center justify-between h-14 px-2">
                       <span className="text-h3 text-text-primary">CNVRTED</span>
                       <div className="flex items-center gap-3">
-                        <span className="inline-flex items-center justify-center bg-accent text-white text-caption font-medium rounded-md py-[6px] px-4">
+                        <span className="inline-flex items-center justify-center bg-accent text-on-accent text-caption font-medium rounded-md py-[6px] px-4">
                           Join the waitlist
                         </span>
                         {/* Static hamburger representation */}
@@ -318,7 +318,7 @@ export default function Phase3PreviewPage() {
                       <div className="absolute top-0 inset-x-0 h-14 bg-background border-b border-border flex items-center justify-between px-6">
                         <span className="text-h3 text-text-primary">CNVRTED</span>
                         <div className="flex items-center gap-3">
-                          <span className="inline-flex items-center justify-center bg-accent text-white text-caption font-medium rounded-md py-[6px] px-4">
+                          <span className="inline-flex items-center justify-center bg-accent text-on-accent text-caption font-medium rounded-md py-[6px] px-4">
                             Join the waitlist
                           </span>
                           {/* X icon */}
@@ -601,7 +601,7 @@ export default function Phase3PreviewPage() {
                         <div className="flex flex-col gap-sm items-start">
                           <span
                             aria-hidden="true"
-                            className="inline-flex items-center justify-center gap-2 rounded-md text-body font-medium py-3 px-6 bg-accent text-white"
+                            className="inline-flex items-center justify-center gap-2 rounded-md text-body font-medium py-3 px-6 bg-accent text-on-accent"
                             style={{ outline: '2px solid white', outlineOffset: '2px', boxShadow: '0 0 0 4px #2B5CE6' }}
                           >
                             Button focus
@@ -624,7 +624,7 @@ export default function Phase3PreviewPage() {
 
                       {/* Skip link visible state */}
                       <div className="relative">
-                        <div className="inline-flex items-center gap-sm px-lg py-sm bg-accent text-white rounded-md text-body font-medium">
+                        <div className="inline-flex items-center gap-sm px-lg py-sm bg-accent text-on-accent rounded-md text-body font-medium">
                           Skip to main content
                         </div>
                         <p className="text-mono-tag font-mono text-text-tertiary mt-xs">

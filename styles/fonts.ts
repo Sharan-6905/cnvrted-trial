@@ -17,13 +17,28 @@
  * component proportions will be accurate enough to develop against.
  */
 
-import { DM_Sans, JetBrains_Mono } from 'next/font/google'
-// import localFont from 'next/font/local'
+import { JetBrains_Mono } from 'next/font/google'
+import localFont from 'next/font/local'
 
-// ─── Temporary: DM Sans as General Sans stand-in ────────────────────────────
-export const sans = DM_Sans({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
+// ─── Inter — from Cormorant_Garamond,Inter.zip (static weights) ─────────────
+export const sans = localFont({
+  src: [
+    {
+      path: '../public/fonts/Inter_24pt-Regular.ttf',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/Inter_24pt-Medium.ttf',
+      weight: '500',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/Inter_24pt-SemiBold.ttf',
+      weight: '600',
+      style: 'normal',
+    },
+  ],
   variable: '--font-sans',
   display: 'swap',
   preload: true,

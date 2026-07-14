@@ -37,28 +37,29 @@
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
 
-  /* ── Color — Light Mode ─────────────────────────────────────────────────── */
-  --color-background:          #FAF8F4;   /* Warm cream */
-  --color-surface:             #F2EFE9;   /* Slightly deeper cream for card backgrounds */
-  --color-surface-raised:      #FFFFFF;   /* Pure white for elevated card faces */
-  --color-border:              #E4DFD6;   /* Warm grey border */
+  /* ── Color — Dark Mode (register.cnvrted.com questionnaire palette) ─────── */
+  --color-background:          #0a0a0a;   /* Near-black page */
+  --color-surface:             #171717;   /* Section surface */
+  --color-surface-raised:      #1c1c1c;   /* Elevated card faces */
+  --color-border:              #ffffff1a; /* Translucent hairline */
 
-  --color-text-primary:        #0D1210;   /* Warm near-black */
-  --color-text-secondary:      #4A5250;   /* Warm mid-grey */
-  --color-text-tertiary:       #8A9490;   /* Muted label grey */
+  --color-text-primary:        #fafafa;
+  --color-text-secondary:      #a1a1a1;
+  --color-text-tertiary:       #6b6b6b;
 
-  --color-accent:              #0B6B66;   /* Deep teal */
-  --color-accent-hover:        #085c57;   /* 10% darker for hover */
-  --color-accent-link:         #085c57;
-  --color-accent-dim:          #E6F4F1;   /* Mint tint for tag/badge backgrounds */
+  --color-accent:              #fafafa;   /* Monochrome white accent */
+  --color-accent-hover:        #ffffff;
+  --color-on-accent:           #0a0a0a;   /* Text/icon colour on accent surfaces */
+  --color-accent-link:         #fafafa;
+  --color-accent-dim:          #ffffff14; /* Translucent chip surface */
 
-  --color-intent-high-bg:      #0B6B66;   /* Solid teal for HIGH INTENT badge */
-  --color-intent-high-text:    #FFFFFF;
-  --color-intent-medium-bg:    #FEF3E2;   /* Warm amber tint for MEDIUM INTENT */
-  --color-intent-medium-text:  #92540A;
+  --color-intent-high-bg:      #fafafa;   /* White pill for HIGH INTENT badge */
+  --color-intent-high-text:    #0a0a0a;
+  --color-intent-medium-bg:    #ffffff14;
+  --color-intent-medium-text:  #a1a1a1;
 
   --color-success:             #1E9E6B;
-  --color-error:               #D93025;
+  --color-error:               #e5484d;
 
   /* ── Color — Dark Section Palette ──────────────────────────────────────── */
   --color-dark-bg:             #031B1D;   /* Reference dark teal-black */
@@ -146,18 +147,18 @@
  * unchanged — they automatically resolve to dark values via CSS cascade.
  * ─────────────────────────────────────────────────────────────────────────── */
 [data-theme="dark"] {
-  --color-background:     #031B1D;
-  --color-surface:        #0A2527;
-  --color-surface-raised: #0F2E31;
-  --color-border:         #1A3A3D;
+  --color-background:     #171717;
+  --color-surface:        #1c1c1c;
+  --color-surface-raised: #222222;
+  --color-border:         #ffffff1a;
 
-  --color-text-primary:   #F0F5F4;
-  --color-text-secondary: #8AADA9;
-  --color-text-tertiary:  #4A6A67;
+  --color-text-primary:   #fafafa;
+  --color-text-secondary: #a1a1a1;
+  --color-text-tertiary:  #6b6b6b;
 
-  --color-accent:         #2CC4BB;
-  --color-accent-link:    #2CC4BB;
-  --color-accent-dim:     rgba(44, 196, 187, 0.12);
+  --color-accent:         #fafafa;
+  --color-accent-link:    #fafafa;
+  --color-accent-dim:     #ffffff14;
 }
 
 /* ─── Base Reset ───────────────────────────────────────────────────────────────
@@ -211,7 +212,7 @@ p {
  * Applied via utility class in the component, overrides the static @theme value.
  * ─────────────────────────────────────────────────────────────────────────── */
 .text-display-fluid {
-  font-size: clamp(2.5rem, 5.5vw, 4.5rem);   /* 40px → 72px */
+  font-size: clamp(2rem, 4.2vw, 3.375rem);   /* 32px → 54px */
   line-height: 1.05;
   font-weight: 600;
 }
@@ -232,7 +233,7 @@ p {
   z-index: 9999;
   padding: 0.5rem 1rem;
   background: var(--color-accent);
-  color: #FFFFFF;
+  color: var(--color-on-accent);
   font-weight: 500;
   border-radius: var(--radius-md);
   text-decoration: none;
@@ -320,4 +321,49 @@ p {
  * ─────────────────────────────────────────────────────────────────────────── */
 .tracking-label {
   letter-spacing: 0.08em;
+}
+
+/* ─── Wordmark Glow ─────────────────────────────────────────────────────────
+ * Giant background wordmark (Footer). Two stacked text layers of identical
+ * type: `__base` is the always-visible outline; `__spot` is the same glyphs
+ * with a solid fill, revealed only inside a radial-gradient mask centered on
+ * --x/--y (set by WordmarkGlow's rAF-throttled pointermove handler). The
+ * whole block fades top/bottom via a linear-gradient mask so it blends into
+ * the page instead of cutting off hard.
+ * ─────────────────────────────────────────────────────────────────────────── */
+.wordmark-glow {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  user-select: none;
+  height: clamp(105px, 15vw, 175px);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
+}
+
+.wordmark-glow__base,
+.wordmark-glow__spot {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  margin: 0;
+  white-space: nowrap;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(150px, 22vw, 250px);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.wordmark-glow__base {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.06);
+}
+
+.wordmark-glow__spot {
+  color: rgba(250, 250, 250, 0.55);
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.06);
+  -webkit-mask-image: radial-gradient(circle 110px at var(--x, -9999px) var(--y, -9999px), black 0%, transparent 100%);
+  mask-image: radial-gradient(circle 110px at var(--x, -9999px) var(--y, -9999px), black 0%, transparent 100%);
 }

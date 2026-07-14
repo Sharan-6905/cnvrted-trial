@@ -8,8 +8,8 @@ import { DURATION, EASE } from '@/lib/tokens'
 
 function IntentCard({ card, index }: { card: IntentCardCopy; index: number }) {
   const intentStyles = card.intent === 'HIGH'
-    ? 'bg-[#0B6B66] text-white'
-    : 'bg-[#FEF3E2] text-[#92540A]'
+    ? 'bg-accent text-on-accent'
+    : 'bg-accent-dim text-text-secondary'
 
   return (
     <motion.article

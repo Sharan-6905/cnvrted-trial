@@ -19,7 +19,7 @@ const COMPARISONS = [
 const SIGNALS = [
   {
     label: 'HIRING',
-    color: '#0B6B66',
+    color: 'var(--color-accent)',
     bg: 'rgba(11,107,102,0.06)',
     title: 'Hiring activity',
     body: 'A company posting 12 AE roles is not a lead — it is a signal. New headcount means new initiatives, new budget, and a sales motion that needs tools to back it up.',
@@ -81,8 +81,8 @@ export default function WhyCNVRTEDPage() {
               </p>
               <a
                 href="/"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-body font-medium text-white transition-opacity duration-200 hover:opacity-90"
-                style={{ backgroundColor: '#0B6B66' }}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-body font-medium text-on-accent transition-opacity duration-200 hover:opacity-90"
+                style={{ backgroundColor: 'var(--color-accent)' }}
               >
                 Join the waitlist
               </a>
@@ -112,7 +112,7 @@ export default function WhyCNVRTEDPage() {
                     <p className="text-caption font-mono text-text-tertiary uppercase tracking-widest" style={{ fontSize: 10 }}>Lead databases ask</p>
                   </div>
                   <div className="px-5 py-3">
-                    <p className="text-caption font-mono uppercase tracking-widest" style={{ fontSize: 10, color: '#0B6B66' }}>CNVRTED asks</p>
+                    <p className="text-caption font-mono uppercase tracking-widest" style={{ fontSize: 10, color: 'var(--color-accent)' }}>CNVRTED asks</p>
                   </div>
                 </div>
                 {COMPARISONS.map((row, i) => (
@@ -121,7 +121,7 @@ export default function WhyCNVRTEDPage() {
                       <span className="text-body text-text-secondary" style={{ fontSize: 13 }}>{row.left}</span>
                     </div>
                     <div className="px-5 py-3">
-                      <span className="text-body font-medium" style={{ fontSize: 13, color: '#0B6B66' }}>{row.right}</span>
+                      <span className="text-body font-medium" style={{ fontSize: 13, color: 'var(--color-accent)' }}>{row.right}</span>
                     </div>
                   </div>
                 ))}
@@ -230,8 +230,8 @@ export default function WhyCNVRTEDPage() {
             </p>
             <a
               href="/"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-body font-semibold text-white transition-opacity duration-200 hover:opacity-90"
-              style={{ backgroundColor: '#0B6B66' }}
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-body font-semibold text-on-accent transition-opacity duration-200 hover:opacity-90"
+              style={{ backgroundColor: 'var(--color-accent)' }}
             >
               Join the waitlist
             </a>

@@ -64,7 +64,7 @@ export function HeroVisual({ className = '' }: { className?: string }) {
           <svg width="40" height="140" viewBox="0 0 40 140" fill="none" className="overflow-visible">
             <motion.path
               d="M 20 0 C 20 40, 20 100, 20 140"
-              stroke="#0B6B66"
+              stroke="var(--color-accent)"
               strokeWidth="1.5"
               strokeDasharray="4 4"
               fill="none"
@@ -75,7 +75,7 @@ export function HeroVisual({ className = '' }: { className?: string }) {
             {/* Arrow head */}
             <motion.polygon
               points="14,130 20,142 26,130"
-              fill="#0B6B66"
+              fill="var(--color-accent)"
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.6 }}
               transition={{ duration: 0.3, delay: HERO_DELAYS.visual + 1.4 }}
@@ -120,7 +120,7 @@ export function HeroVisual({ className = '' }: { className?: string }) {
 
             {/* Score + badge */}
             <div className="flex items-center justify-between pt-2 border-t border-border">
-              <span className="inline-flex items-center rounded-md bg-[#0B6B66] text-white text-[10px] font-mono py-xs px-[0.625rem] leading-none">
+              <span className="inline-flex items-center rounded-md bg-accent text-on-accent text-[10px] font-mono py-xs px-[0.625rem] leading-none">
                 HIGH INTENT
               </span>
               <span className="text-[1.4rem] font-bold text-text-primary tabular-nums leading-none">92</span>
