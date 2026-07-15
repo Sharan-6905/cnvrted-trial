@@ -105,7 +105,7 @@ export function HeroSection() {
               variants={fadeInUp}
               transition={{ delay: HERO_DELAYS.subheadline, duration: DURATION.base, ease: EASE.default }}
               className="text-body-lg leading-relaxed max-w-[560px]"
-              style={{ fontFamily: 'var(--font-mono)' }}
+              style={{ fontFamily: 'var(--font-sans)' }}
             >
               <span className="text-text-primary font-medium">{HERO.whatItIs}</span>{' '}
               <span className="text-text-secondary">{HERO.goal}</span>
