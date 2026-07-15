@@ -104,7 +104,7 @@ function SourceNode({ source, progress, index }: { source: typeof SOURCES[number
 
 function CentralCore({ progress }: { progress: MotionValue }) {
   const scale = useTransform(progress, [0, 0.4, 0.45, 0.5, 0.9], [1, 1, 1.3, 1, 1])
-  const rotate = useTransform(progress, [0, 1], [0, 180])
+  const rotate = useTransform(progress, [0, 1], [0, 360])
 
   return (
     <motion.div
@@ -129,11 +129,11 @@ function CentralCore({ progress }: { progress: MotionValue }) {
 
 function EnrichedProfile({ progress, reducedMotion }: { progress: MotionValue; reducedMotion: boolean }) {
   const y = useTransform(progress, [0.45, 0.55], [40, 0])
-  const opacity = useTransform(progress, [0.45, 0.55, 0.9, 0.95], [0, 1, 1, 0])
+  const opacity = useTransform(progress, [0.45, 0.55, 0.88, 0.94], [0, 1, 1, 0])
   const rotateX = useTransform(progress, [0.45, 0.55], [15, 0])
 
-  const scoreOpacity = useTransform(progress, [0.65, 0.7], [0, 1])
-  const scoreMV = useTransform(progress, [0.7, 0.85], [0, 92])
+  const scoreOpacity = useTransform(progress, [0.6, 0.65], [0, 1])
+  const scoreMV = useTransform(progress, [0.65, 0.72], [0, 92])
   const [score, setScore] = useState(0)
   
   useMotionValueEvent(scoreMV, 'change', (v) => setScore(Math.round(v)))
@@ -175,9 +175,9 @@ function EnrichedProfile({ progress, reducedMotion }: { progress: MotionValue; r
 
         <div className="relative z-10 space-y-3.5">
           {PROFILE_FIELDS.map((field, i) => {
-            const fieldStart = 0.55 + i * 0.04
-            const fieldOpacity = useTransform(progress, [fieldStart, fieldStart + 0.05], [0, 1])
-            const fieldX = useTransform(progress, [fieldStart, fieldStart + 0.05], [-15, 0])
+            const fieldStart = 0.55 + i * 0.03
+            const fieldOpacity = useTransform(progress, [fieldStart, fieldStart + 0.04], [0, 1])
+            const fieldX = useTransform(progress, [fieldStart, fieldStart + 0.04], [-15, 0])
             
             return (
               <motion.div 
@@ -205,7 +205,7 @@ export interface StoryVisualProps {
 
 export function StoryVisual({ className = '', compact = false }: StoryVisualProps) {
   const reducedMotion = useMotionPreference()
-  const loopDuration = compact ? 7 : 14
+  const loopDuration = compact ? 10 : 14
   const progress = useMotionValue(0)
 
   useEffect(() => {
@@ -219,8 +219,11 @@ export function StoryVisual({ className = '', compact = false }: StoryVisualProp
     return () => controls.stop()
   }, [progress, reducedMotion, loopDuration])
 
-  // Center node fades out when the glass card is fully revealed
-  const bgDim = useTransform(progress, [0.4, 0.5, 0.9, 0.95], [1, 0.1, 0.1, 1])
+  // Center node fades fully out while the glass card is shown, and only
+  // starts fading back in once the card has completely left (0.94) — no
+  // overlap with the card's own fade-out ([0.88, 0.94]) so the two never
+  // cross-fade into a visible "double pop."
+  const bgDim = useTransform(progress, [0.4, 0.5, 0.94, 1], [1, 0, 0, 1])
 
   return (
     <div 
