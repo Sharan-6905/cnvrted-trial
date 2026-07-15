@@ -129,7 +129,7 @@ function CentralCore({ progress }: { progress: MotionValue }) {
 
 function EnrichedProfile({ progress, reducedMotion }: { progress: MotionValue; reducedMotion: boolean }) {
   const y = useTransform(progress, [0.45, 0.55], [40, 0])
-  const opacity = useTransform(progress, [0.45, 0.55, 0.88, 0.94], [0, 1, 1, 0])
+  const opacity = useTransform(progress, [0.45, 0.55, 0.86, 0.94], [0, 1, 1, 0])
   const rotateX = useTransform(progress, [0.45, 0.55], [15, 0])
 
   const scoreOpacity = useTransform(progress, [0.6, 0.65], [0, 1])
@@ -219,11 +219,13 @@ export function StoryVisual({ className = '', compact = false }: StoryVisualProp
     return () => controls.stop()
   }, [progress, reducedMotion, loopDuration])
 
-  // Center node fades fully out while the glass card is shown, and only
-  // starts fading back in once the card has completely left (0.94) — no
-  // overlap with the card's own fade-out ([0.88, 0.94]) so the two never
-  // cross-fade into a visible "double pop."
-  const bgDim = useTransform(progress, [0.4, 0.5, 0.94, 1], [1, 0, 0, 1])
+  // Center node stays fully hidden while the glass card is shown, then
+  // crossfades back in over the EXACT same window the card fades out in
+  // ([0.86, 0.94], matching EnrichedProfile's opacity keyframes below).
+  // Card-opacity + orb-opacity always sum to 1 across that window, so the
+  // handoff is a true crossfade — never both visible (a "pop"), never both
+  // invisible (a dead gap).
+  const bgDim = useTransform(progress, [0.4, 0.5, 0.86, 0.94], [1, 0, 0, 1])
 
   return (
     <div 
