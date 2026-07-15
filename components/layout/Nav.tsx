@@ -98,8 +98,8 @@ export function Nav() {
         {/* ── Pill: desktop nav links + Slack ──────────────────────────────── */}
         <div
           className={[
-            'pointer-events-auto hidden lg:flex items-center gap-xl',
-            'h-14 px-8 rounded-full',
+            'pointer-events-auto hidden xl:flex items-center gap-2xl',
+            'h-16 px-10 rounded-full',
             'transition-[background-color,border-color,box-shadow] duration-[200ms] ease-[cubic-bezier(0.4,0,0.2,1)]',
             'border',
             scrolled
@@ -107,7 +107,7 @@ export function Nav() {
               : 'bg-background/80 border-border/60 backdrop-blur-sm',
           ].join(' ')}
         >
-          <nav aria-label="Primary navigation" className="flex items-center gap-xl">
+          <nav aria-label="Primary navigation" className="flex items-center gap-2xl">
             {NAV.links.map((link) => (
               <a
                 key={link.label}
@@ -132,7 +132,7 @@ export function Nav() {
             href="https://join.slack.com/t/cnvrted/shared_invite/zt-4095523xy-~cLpdY4E3fhQ4_cKvUo8Ug"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 text-body text-text-secondary hover:text-text-primary transition-colors duration-[110ms] border border-border rounded-full px-5 py-2 hover:border-text-secondary"
+            className="flex items-center gap-2 text-body text-text-secondary hover:text-text-primary transition-colors duration-[110ms] border border-border rounded-full px-6 py-2.5 hover:border-text-secondary"
           >
             {/* Slack icon (inline, 4-color) */}
             <svg viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style={{ width: 16, height: 16, display: 'block', flexShrink: 0 }}>
@@ -164,7 +164,7 @@ export function Nav() {
             aria-haspopup="dialog"
             onClick={() => (menuOpen ? closeMenu() : openMenu())}
             className={[
-              'lg:hidden',
+              'xl:hidden',
               'flex flex-col items-center justify-center gap-[5px]',
               'w-10 h-10 rounded-md shrink-0',
               'focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2',
