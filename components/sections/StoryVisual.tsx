@@ -58,16 +58,32 @@ function RadarGrid() {
 
 function SourceNode({ source, progress, index }: { source: typeof SOURCES[number]; progress: MotionValue; index: number }) {
   const { x, y } = getCoords(source.angle, source.distance)
-  
+
   // Stagger entry
   const start = index * 0.05
   const end = start + 0.1
   const opacity = useTransform(progress, [start, end, 0.4, 0.45], [0, 1, 1, 0])
   const scale = useTransform(progress, [start, end], [0.5, 1])
-  
+
   // Beam line
   const beamProgress = useTransform(progress, [end, end + 0.15], [0, 1])
   const beamOpacity = useTransform(progress, [end, end + 0.15, 0.4, 0.45], [0, 1, 1, 0])
+
+  // Data packet — a small dot that travels from the source down the beam
+  // to the center, looping while the beam is live. Purely additive: reads
+  // off beamOpacity/beamProgress that already exist, no new timing windows.
+  const packetT = useTransform(progress, (p) => {
+    const local = (p - end) * 6 // one packet trip roughly every ~0.17 of progress
+    return ((local % 1) + 1) % 1
+  })
+  const packetX = useTransform(packetT, [0, 1], [x, 0])
+  const packetY = useTransform(packetT, [0, 1], [y, 0])
+  const packetOpacity = useTransform([beamOpacity, packetT], (values) => {
+    const [beamO, t] = values as [number, number]
+    // fade the packet in/out at each end of its trip so it doesn't pop
+    const edgeFade = Math.min(t * 6, 1, (1 - t) * 6)
+    return beamO * Math.max(0, edgeFade)
+  })
 
   const Icon = source.icon
 
@@ -85,7 +101,7 @@ function SourceNode({ source, progress, index }: { source: typeof SOURCES[number
         </span>
       </motion.div>
 
-      {/* Beam drawing to center */}
+      {/* Beam drawing to center, plus a traveling packet dot */}
       <svg className="pointer-events-none absolute left-1/2 top-1/2 overflow-visible">
         <motion.line
           x1={x} y1={y} x2={0} y2={0}
@@ -95,6 +111,16 @@ function SourceNode({ source, progress, index }: { source: typeof SOURCES[number
           style={{
             pathLength: beamProgress,
             opacity: beamOpacity,
+          }}
+        />
+        <motion.circle
+          r={3}
+          fill="white"
+          style={{
+            cx: packetX,
+            cy: packetY,
+            opacity: packetOpacity,
+            filter: 'drop-shadow(0 0 4px rgba(255,255,255,0.9))',
           }}
         />
       </svg>
@@ -135,8 +161,14 @@ function EnrichedProfile({ progress, reducedMotion }: { progress: MotionValue; r
   const scoreOpacity = useTransform(progress, [0.6, 0.65], [0, 1])
   const scoreMV = useTransform(progress, [0.65, 0.72], [0, 92])
   const [score, setScore] = useState(0)
-  
+
   useMotionValueEvent(scoreMV, 'change', (v) => setScore(Math.round(v)))
+
+  // A single detection "ping" — a ring that expands and fades right as the
+  // score starts revealing, underscoring the moment the signal is caught.
+  // Reuses the scoreOpacity window's start; doesn't alter any existing timing.
+  const pingScale = useTransform(progress, [0.58, 0.7], [0.6, 2.2])
+  const pingOpacity = useTransform(progress, [0.58, 0.6, 0.7], [0, 0.5, 0])
 
   const isFinalState = reducedMotion
 
@@ -163,7 +195,14 @@ function EnrichedProfile({ progress, reducedMotion }: { progress: MotionValue; r
             <h3 className="text-xl font-bold text-white tracking-tight">{HERO.visualCompanyName}</h3>
             <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.15em] text-white/50">Intelligence Profile</p>
           </div>
-          <motion.div style={{ opacity: isFinalState ? 1 : scoreOpacity }} className="flex flex-col items-end">
+          <motion.div style={{ opacity: isFinalState ? 1 : scoreOpacity }} className="relative flex flex-col items-end">
+            {!isFinalState && (
+              <motion.span
+                aria-hidden="true"
+                className="pointer-events-none absolute -right-2 -top-2 h-8 w-8 rounded-full border border-white/60"
+                style={{ scale: pingScale, opacity: pingOpacity }}
+              />
+            )}
             <span className="rounded bg-white px-2 py-0.5 font-mono text-[10px] font-bold text-black tracking-wide">
               HIGH INTENT
             </span>
