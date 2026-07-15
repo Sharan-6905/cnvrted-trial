@@ -47,19 +47,6 @@ export function Nav() {
   const scrolled = useNavScrolled('hero-headline')
   const [menuOpen, setMenuOpen] = useState(false)
   const [betaOpen, setBetaOpen] = useState(false)
-  const [visible, setVisible] = useState(true)
-  const lastScrollY = useRef(0)
-
-  useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY
-      if (y < 60) { setVisible(true); lastScrollY.current = y; return }
-      setVisible(y < lastScrollY.current)
-      lastScrollY.current = y
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
   const hamburgerRef = useRef<HTMLButtonElement>(null)
 
   const openMenu = () => setMenuOpen(true)
@@ -93,7 +80,6 @@ export function Nav() {
     <>
       <header
         role="banner"
-        style={{ transform: visible ? 'translateY(0)' : 'translateY(-120%)', transition: 'transform 300ms cubic-bezier(0.4,0,0.2,1)' }}
         className="fixed top-4 inset-x-0 z-50 flex items-center justify-between px-4 md:px-8 pointer-events-none"
       >
         {/* ── Wordmark — outside the pill, pinned to the far left ─────────── */}

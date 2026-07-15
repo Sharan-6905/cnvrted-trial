@@ -207,9 +207,9 @@ export function PipelineScrollSection() {
       ref={scrollRef}
       aria-label="From score to pipeline"
       className="relative bg-black"
-      style={{ height: `${PIPELINE_STEPS.length * 100}vh` }}
+      style={{ height: `${PIPELINE_STEPS.length * 100}dvh` }}
     >
-      <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden py-16 md:py-0">
+      <div className="sticky top-0 flex h-[100dvh] flex-col justify-center overflow-hidden py-16 md:py-0">
 
         {/* Background glow for depth */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.03),transparent_60%)]" />
