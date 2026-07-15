@@ -35,7 +35,7 @@ function ScanningBadge() {
       <span className="text-caption font-mono text-text-tertiary uppercase tracking-label">
         Scanning
       </span>
-      <span className="relative inline-block h-[1.1em] min-w-[6ch] overflow-hidden align-middle">
+      <span className="relative inline-block h-[1.1em] w-[7rem] overflow-hidden align-middle">
         <AnimatePresence mode="wait">
           <motion.span
             key={SCAN_SOURCES[index]}
@@ -95,8 +95,8 @@ export function HeroSection() {
               id="hero-headline"
               variants={fadeInUp}
               transition={{ delay: HERO_DELAYS.headline, duration: DURATION.base, ease: EASE.default }}
-              className="text-display-fluid font-semibold text-text-primary tracking-tight"
-              style={{ whiteSpace: 'pre-line', fontFamily: 'var(--font-mono)' }}
+              className="text-display-fluid font-bold text-text-primary tracking-tight"
+              style={{ whiteSpace: 'pre-line', fontFamily: 'var(--font-poppins)' }}
             >
               {HERO.headline}
             </motion.h1>
@@ -105,7 +105,7 @@ export function HeroSection() {
               variants={fadeInUp}
               transition={{ delay: HERO_DELAYS.subheadline, duration: DURATION.base, ease: EASE.default }}
               className="text-body-lg leading-relaxed max-w-[560px]"
-              style={{ fontFamily: 'var(--font-sans)' }}
+              style={{ fontFamily: 'var(--font-mono)' }}
             >
               <span className="text-text-primary font-medium">{HERO.whatItIs}</span>{' '}
               <span className="text-text-secondary">{HERO.goal}</span>

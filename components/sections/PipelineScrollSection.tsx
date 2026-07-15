@@ -244,7 +244,7 @@ export function PipelineScrollSection() {
               return (
                 <div
                   key={step.id}
-                  className="relative flex flex-col items-center gap-3 md:gap-4 text-center z-10 w-20 md:w-32"
+                  className="relative flex flex-col items-center gap-3 md:gap-4 text-center z-10 w-10 sm:w-20 md:w-32"
                 >
                   <div
                     className={`flex h-10 w-10 md:h-12 md:w-12 shrink-0 items-center justify-center rounded-full border transition-all duration-300 ${
@@ -255,8 +255,12 @@ export function PipelineScrollSection() {
                   >
                     <Icon weight={isActive ? 'fill' : 'regular'} className="h-5 w-5" />
                   </div>
+                  {/* Label hidden below sm — the active step's name is already
+                      shown as the detail panel heading, so icon-only avoids
+                      two-word labels ("Personalized Outreach") wrapping and
+                      colliding with the neighboring step at narrow widths. */}
                   <span
-                    className={`text-xs md:text-sm font-semibold tracking-tight transition-colors duration-300 ${
+                    className={`hidden sm:block text-xs md:text-sm font-semibold tracking-tight transition-colors duration-300 ${
                       isActive ? 'text-white' : 'text-white/50'
                     }`}
                   >

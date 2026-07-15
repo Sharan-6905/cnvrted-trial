@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { sans, mono, display } from '@/styles/fonts'
+import { sans, mono, display, poppins } from '@/styles/fonts'
 import { MotionProvider } from '@/components/providers/MotionProvider'
 import { Nav } from '@/components/layout/Nav'
 import { META, UI } from '@/content/copy'
@@ -48,7 +48,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${sans.variable} ${mono.variable} ${display.variable}`}
+      className={`${sans.variable} ${mono.variable} ${display.variable} ${poppins.variable}`}
     >
       <head>
         {/* This Next.js version doesn't auto-inject the <link> for app/icon.tsx

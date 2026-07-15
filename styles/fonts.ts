@@ -17,7 +17,7 @@
  * component proportions will be accurate enough to develop against.
  */
 
-import { JetBrains_Mono, Space_Grotesk } from 'next/font/google'
+import { JetBrains_Mono, Space_Grotesk, Poppins } from 'next/font/google'
 import localFont from 'next/font/local'
 
 // ─── Inter — from Cormorant_Garamond,Inter.zip (static weights) ─────────────
@@ -75,6 +75,15 @@ export const mono = JetBrains_Mono({
   variable: '--font-mono',
   display: 'swap',
   preload: false, // Below-the-fold usage — don't block initial render
+})
+
+// ─── Poppins — rounded geometric sans, used for the hero headline only ───────
+export const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['600', '700'],
+  variable: '--font-poppins',
+  display: 'swap',
+  preload: true,
 })
 
 // ─── Space Grotesk — distinctive display face for H1/H2/section labels ───────

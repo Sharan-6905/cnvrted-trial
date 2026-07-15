@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, useTransform, useMotionValueEvent, useMotionValue, animate, type MotionValue } from 'framer-motion'
 import { LinkedinLogo, RedditLogo, Briefcase, CurrencyDollar, Globe, ChartLineUp } from '@phosphor-icons/react'
 import { HERO } from '@/content/copy'
@@ -35,9 +35,12 @@ const getCoords = (angle: number, distance: number) => ({
 
 // ── Components ────────────────────────────────────────────────────────────────
 
-function RadarGrid() {
+function RadarGrid({ radiusScale }: { radiusScale: number }) {
   return (
-    <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-[0.07]">
+    <div
+      className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-[0.07]"
+      style={{ transform: `scale(${radiusScale})` }}
+    >
       <div className="absolute h-[250px] w-[250px] rounded-full border border-white" />
       <div className="absolute h-[450px] w-[450px] rounded-full border border-white" />
       <div className="absolute h-[650px] w-[650px] rounded-full border border-white border-dashed" />
@@ -56,8 +59,10 @@ function RadarGrid() {
   )
 }
 
-function SourceNode({ source, progress, index }: { source: typeof SOURCES[number]; progress: MotionValue; index: number }) {
-  const { x, y } = getCoords(source.angle, source.distance)
+function SourceNode({ source, progress, index, radiusScale, showLabels }: { source: typeof SOURCES[number]; progress: MotionValue; index: number; radiusScale: number; showLabels: boolean }) {
+  const raw = getCoords(source.angle, source.distance)
+  const x = raw.x * radiusScale
+  const y = raw.y * radiusScale
 
   // Stagger entry
   const start = index * 0.05
@@ -96,9 +101,11 @@ function SourceNode({ source, progress, index }: { source: typeof SOURCES[number
         <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/60 shadow-[0_0_15px_rgba(255,255,255,0.1)] backdrop-blur-md">
           <Icon weight="fill" className="h-5 w-5 text-white/90" />
         </div>
-        <span className="rounded border border-white/10 bg-black/40 px-2 py-0.5 text-[10px] font-mono uppercase tracking-widest text-white/70 backdrop-blur-sm">
-          {source.label}
-        </span>
+        {showLabels && (
+          <span className="rounded border border-white/10 bg-black/40 px-2 py-0.5 text-[10px] font-mono uppercase tracking-widest text-white/70 backdrop-blur-sm whitespace-nowrap">
+            {source.label}
+          </span>
+        )}
       </motion.div>
 
       {/* Beam drawing to center, plus a traveling packet dot */}
@@ -242,10 +249,50 @@ export interface StoryVisualProps {
   compact?: boolean
 }
 
+// Largest orbit distance in SOURCES — used to compute how much the
+// constellation must shrink to fit inside narrow (mobile/tablet) panels.
+const MAX_DISTANCE = Math.max(...SOURCES.map((s) => s.distance))
+
 export function StoryVisual({ className = '', compact = false }: StoryVisualProps) {
   const reducedMotion = useMotionPreference()
   const loopDuration = compact ? 10 : 14
   const progress = useMotionValue(0)
+
+  // The orbit distances (180-280px) were authored for a wide desktop panel.
+  // On narrow panels (mobile/tablet), that pushes icons and their labels
+  // past the panel edge, where they get clipped by overflow-hidden. Measure
+  // the actual panel width and shrink the orbit radius (not the icon/text
+  // size, so labels stay legible) so everything stays inside the frame.
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [radiusScale, setRadiusScale] = useState(1)
+  // Below this panel width, source labels ("LINKEDIN", "TECH INTENT", etc.)
+  // don't have enough room to sit apart from each other even after
+  // shrinking the orbit radius — two icons at a narrow angular gap end up
+  // with overlapping label text. Past this point we drop to icon-only,
+  // which tolerates a much tighter orbit than text ever could.
+  const [showLabels, setShowLabels] = useState(true)
+
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+    const compute = (width: number) => {
+      const withLabels = width >= 480
+      setShowLabels(withLabels)
+      // Reserve enough beyond the orbit point for either the label extent
+      // (labels shown) or just the icon itself (labels hidden).
+      const reserve = withLabels ? 55 : 30
+      const floor = withLabels ? 0.42 : 0.6
+      const available = width / 2 - reserve
+      setRadiusScale(Math.min(1, Math.max(floor, available / MAX_DISTANCE)))
+    }
+    compute(el.clientWidth)
+    const observer = new ResizeObserver((entries) => {
+      const width = entries[0]?.contentRect.width
+      if (width) compute(width)
+    })
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     if (reducedMotion) return
@@ -267,19 +314,20 @@ export function StoryVisual({ className = '', compact = false }: StoryVisualProp
   const bgDim = useTransform(progress, [0.4, 0.5, 0.86, 0.94], [1, 0, 0, 1])
 
   return (
-    <div 
-      className={`relative w-full select-none overflow-hidden bg-black ${className}`} 
-      aria-hidden="true" 
+    <div
+      ref={containerRef}
+      className={`relative w-full select-none overflow-hidden bg-black ${className}`}
+      aria-hidden="true"
     >
       <span className="sr-only">{HERO.visualDescription}</span>
-      
+
       {/* Background sweep and rings */}
-      <RadarGrid />
-      
+      <RadarGrid radiusScale={radiusScale} />
+
       {/* Dynamic Data Gathering Phase */}
       <motion.div style={{ opacity: reducedMotion ? 0 : bgDim }} className="absolute inset-0 z-10">
         {SOURCES.map((source, i) => (
-          <SourceNode key={source.key} source={source} progress={progress} index={i} />
+          <SourceNode key={source.key} source={source} progress={progress} index={i} radiusScale={radiusScale} showLabels={showLabels} />
         ))}
         <CentralCore progress={progress} />
       </motion.div>
