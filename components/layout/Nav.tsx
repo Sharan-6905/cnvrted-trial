@@ -83,12 +83,16 @@ export function Nav() {
         className="fixed top-4 inset-x-0 z-50 flex items-center justify-between px-4 md:px-8 pointer-events-none"
       >
         {/* ── Wordmark — outside the pill, pinned to the far left ─────────── */}
+        {/* backdrop-blur + background chip so page content scrolling underneath
+            (this header is fixed) never visually overlaps/collides with the
+            wordmark — previously it was bare text with no backdrop. */}
         <Link
           href="/"
           aria-label="CNVRTED — return to homepage"
           className={[
             'pointer-events-auto text-h3 text-text-primary shrink-0 leading-none',
-            'focus-visible:outline-none rounded-sm',
+            'rounded-lg bg-background/80 px-3 py-1.5 backdrop-blur-sm',
+            'focus-visible:outline-none',
             'focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2',
           ].join(' ')}
         >
@@ -125,31 +129,38 @@ export function Nav() {
                 {link.label}
               </a>
             ))}
-          </nav>
 
-          {/* Join our Slack */}
-          <a
-            href="https://join.slack.com/t/cnvrted/shared_invite/zt-4095523xy-~cLpdY4E3fhQ4_cKvUo8Ug"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 text-body text-text-secondary hover:text-text-primary transition-colors duration-[110ms] border border-border rounded-full px-6 py-2.5 hover:border-text-secondary"
-          >
-            {/* Slack icon (inline, 4-color) */}
-            <svg viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style={{ width: 16, height: 16, display: 'block', flexShrink: 0 }}>
-              <path d="M19.712.133a5.381 5.381 0 0 0-5.376 5.387 5.381 5.381 0 0 0 5.376 5.386h5.376V5.52A5.381 5.381 0 0 0 19.712.133m0 14.365H5.376A5.381 5.381 0 0 0 0 19.884a5.381 5.381 0 0 0 5.376 5.387h14.336a5.381 5.381 0 0 0 5.376-5.387 5.381 5.381 0 0 0-5.376-5.386" fill="#36C5F0"/>
-              <path d="M53.76 19.884a5.381 5.381 0 0 0-5.376-5.386 5.381 5.381 0 0 0-5.376 5.386v5.387h5.376a5.381 5.381 0 0 0 5.376-5.387m-14.336 0V5.52A5.381 5.381 0 0 0 34.048.133a5.381 5.381 0 0 0-5.376 5.387v14.364a5.381 5.381 0 0 0 5.376 5.387 5.381 5.381 0 0 0 5.376-5.387" fill="#2EB67D"/>
-              <path d="M34.048 54a5.381 5.381 0 0 0 5.376-5.387 5.381 5.381 0 0 0-5.376-5.386h-5.376v5.386A5.381 5.381 0 0 0 34.048 54m0-14.365h14.336a5.381 5.381 0 0 0 5.376-5.386 5.381 5.381 0 0 0-5.376-5.387H34.048a5.381 5.381 0 0 0-5.376 5.387 5.381 5.381 0 0 0 5.376 5.386" fill="#ECB22E"/>
-              <path d="M0 34.249a5.381 5.381 0 0 0 5.376 5.386 5.381 5.381 0 0 0 5.376-5.386v-5.387H5.376A5.381 5.381 0 0 0 0 34.249m14.336 0v14.364A5.381 5.381 0 0 0 19.712 54a5.381 5.381 0 0 0 5.376-5.387V34.249a5.381 5.381 0 0 0-5.376-5.387 5.381 5.381 0 0 0-5.376 5.387" fill="#E01E5A"/>
-            </svg>
-            Join our Slack
-          </a>
+            {/* Join our Slack — sits right after Careers, same treatment as
+                the other nav links (not its own bottom-of-page section). */}
+            <a
+              href="https://join.slack.com/t/cnvrted/shared_invite/zt-4095523xy-~cLpdY4E3fhQ4_cKvUo8Ug"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={[
+                'flex items-center gap-1.5 text-body text-text-secondary hover:text-text-primary',
+                'transition-colors duration-[110ms]',
+                'focus-visible:outline-none focus-visible:text-text-primary',
+                'focus-visible:underline focus-visible:underline-offset-[3px]',
+                '[text-decoration-color:var(--color-accent)]',
+                '[text-decoration-thickness:2px]',
+              ].join(' ')}
+            >
+              <svg viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style={{ width: 14, height: 14, display: 'block', flexShrink: 0 }}>
+                <path d="M19.712.133a5.381 5.381 0 0 0-5.376 5.387 5.381 5.381 0 0 0 5.376 5.386h5.376V5.52A5.381 5.381 0 0 0 19.712.133m0 14.365H5.376A5.381 5.381 0 0 0 0 19.884a5.381 5.381 0 0 0 5.376 5.387h14.336a5.381 5.381 0 0 0 5.376-5.387 5.381 5.381 0 0 0-5.376-5.386" fill="#36C5F0"/>
+                <path d="M53.76 19.884a5.381 5.381 0 0 0-5.376-5.386 5.381 5.381 0 0 0-5.376 5.386v5.387h5.376a5.381 5.381 0 0 0 5.376-5.387m-14.336 0V5.52A5.381 5.381 0 0 0 34.048.133a5.381 5.381 0 0 0-5.376 5.387v14.364a5.381 5.381 0 0 0 5.376 5.387 5.381 5.381 0 0 0 5.376-5.387" fill="#2EB67D"/>
+                <path d="M34.048 54a5.381 5.381 0 0 0 5.376-5.387 5.381 5.381 0 0 0-5.376-5.386h-5.376v5.386A5.381 5.381 0 0 0 34.048 54m0-14.365h14.336a5.381 5.381 0 0 0 5.376-5.386 5.381 5.381 0 0 0-5.376-5.387H34.048a5.381 5.381 0 0 0-5.376 5.387 5.381 5.381 0 0 0 5.376 5.386" fill="#ECB22E"/>
+                <path d="M0 34.249a5.381 5.381 0 0 0 5.376 5.386 5.381 5.381 0 0 0 5.376-5.386v-5.387H5.376A5.381 5.381 0 0 0 0 34.249m14.336 0v14.364A5.381 5.381 0 0 0 19.712 54a5.381 5.381 0 0 0 5.376-5.387V34.249a5.381 5.381 0 0 0-5.376-5.387 5.381 5.381 0 0 0-5.376 5.387" fill="#E01E5A"/>
+              </svg>
+              Join our Slack
+            </a>
+          </nav>
         </div>
 
         {/* ── Early access — outside the pill, pinned to the far right ────── */}
         <div className="pointer-events-auto flex items-center gap-lg">
           <button
             onClick={() => setBetaOpen(true)}
-            className="flex items-center gap-2 text-body font-medium text-text-primary rounded-full px-4 py-1.5 border border-border transition-colors duration-[110ms] hover:border-text-secondary"
+            className="flex items-center gap-2 text-body font-medium text-text-primary rounded-full px-4 py-1.5 border border-border bg-background/80 backdrop-blur-sm transition-colors duration-[110ms] hover:border-text-secondary"
           >
             Early access
           </button>
