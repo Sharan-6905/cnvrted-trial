@@ -9,13 +9,16 @@ import { AiOrbMark } from '@/components/ui/AiOrbMark'
 
 // ── Configuration ─────────────────────────────────────────────────────────────
 
+// Angles are evenly spaced 60° apart (in original clockwise order) so no two
+// icons/labels crowd together — previously Reddit (220°) and Tech Intent
+// (210°) sat only 10° apart while other gaps ranged 50-95°.
 const SOURCES = [
-  { key: 'linkedin', label: 'LinkedIn', icon: LinkedinLogo, angle: -45, distance: 220 },
-  { key: 'reddit', label: 'Reddit', icon: RedditLogo, angle: -140, distance: 180 },
-  { key: 'jobs', label: 'Job Boards', icon: Briefcase, angle: 135, distance: 250 },
+  { key: 'linkedin', label: 'LinkedIn', icon: LinkedinLogo, angle: 345, distance: 220 },
+  { key: 'reddit', label: 'Reddit', icon: RedditLogo, angle: 285, distance: 180 },
+  { key: 'jobs', label: 'Job Boards', icon: Briefcase, angle: 105, distance: 250 },
   { key: 'funding', label: 'Funding', icon: CurrencyDollar, angle: 45, distance: 280 },
-  { key: 'website', label: 'Websites', icon: Globe, angle: -200, distance: 210 },
-  { key: 'signals', label: 'Tech Intent', icon: ChartLineUp, angle: 210, distance: 270 },
+  { key: 'website', label: 'Websites', icon: Globe, angle: 165, distance: 210 },
+  { key: 'signals', label: 'Tech Intent', icon: ChartLineUp, angle: 225, distance: 270 },
 ] as const
 
 const degToRad = (deg: number) => (deg * Math.PI) / 180
@@ -155,6 +158,33 @@ function CentralCore({ progress }: { progress: MotionValue }) {
   )
 }
 
+// The signals that add up to the final score, shown one at a time as the
+// score counts up so a first-time viewer sees WHY the account is HIGH
+// INTENT, not just a number appearing out of nowhere.
+const SCORE_FACTORS = [
+  { label: 'Funding signal', detail: '$25M Series B · 2h ago', weight: 40 },
+  { label: 'Hiring surge', detail: '12 sales roles posted', weight: 32 },
+  { label: 'ICP fit', detail: '9/10 match to your target', weight: 20 },
+] as const
+
+function ScoreFactorRow({ factor, progress, start, end, isFinalState }: { factor: typeof SCORE_FACTORS[number]; progress: MotionValue; start: number; end: number; isFinalState: boolean }) {
+  const opacity = useTransform(progress, [start, end], [0, 1])
+  const x = useTransform(progress, [start, end], [8, 0])
+  const barWidth = useTransform(progress, [end, end + 0.03], ['0%', `${factor.weight}%`])
+
+  return (
+    <motion.div style={{ opacity: isFinalState ? 1 : opacity, x: isFinalState ? 0 : x }} className="flex items-center justify-between gap-3">
+      <div className="min-w-0">
+        <p className="text-[11px] font-medium text-white/85">{factor.label}</p>
+        <p className="truncate text-[10px] text-white/45">{factor.detail}</p>
+      </div>
+      <div className="h-1 w-16 shrink-0 overflow-hidden rounded-full bg-white/10">
+        <motion.div className="h-full rounded-full bg-white/70" style={{ width: isFinalState ? `${factor.weight}%` : barWidth }} />
+      </div>
+    </motion.div>
+  )
+}
+
 function EnrichedProfile({ progress, reducedMotion }: { progress: MotionValue; reducedMotion: boolean }) {
   const y = useTransform(progress, [0.45, 0.55], [40, 0])
   // Card is on screen for [0.45, 0.8] then crossfades straight back to the
@@ -168,6 +198,14 @@ function EnrichedProfile({ progress, reducedMotion }: { progress: MotionValue; r
   const [score, setScore] = useState(0)
 
   useMotionValueEvent(scoreMV, 'change', (v) => setScore(Math.round(v)))
+
+  // Factor rows stagger in right after the score starts counting, each
+  // finishing before the card crossfades out at 0.78.
+  const factorWindows = [
+    [0.6, 0.64],
+    [0.65, 0.69],
+    [0.7, 0.74],
+  ] as const
 
   // A single detection "ping" — a ring that expands and fades right as the
   // score starts revealing, underscoring the moment the signal is caught.
@@ -215,6 +253,21 @@ function EnrichedProfile({ progress, reducedMotion }: { progress: MotionValue; r
               {isFinalState ? 92 : score}
             </span>
           </motion.div>
+        </div>
+
+        {/* Why this score — the factors that add up to it */}
+        <div className="relative z-10 flex flex-col gap-3">
+          <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-white/40">Why this score</p>
+          {SCORE_FACTORS.map((factor, i) => (
+            <ScoreFactorRow
+              key={factor.label}
+              factor={factor}
+              progress={progress}
+              start={factorWindows[i][0]}
+              end={factorWindows[i][1]}
+              isFinalState={isFinalState}
+            />
+          ))}
         </div>
       </div>
     </motion.div>
