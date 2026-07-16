@@ -47,6 +47,8 @@ export const NAV = {
     { label: "Why us", href: "/why-cnvrted" },
     { label: "How it works", href: "/how-it-works" },
     { label: "Pricing", href: "/pricing" },
+    { label: "Blog", href: "/blog" },
+    { label: "Careers", href: "/careers" },
   ] satisfies NavLink[],
   login: { label: "Log in", href: "/login" },
   cta: {
@@ -73,8 +75,9 @@ export const META = {
 export const HERO = {
   eyebrow: "Real-time buying signals for B2B sales teams",
   headline: "Surface buying intent.\nWin more deals.",
-  subheadline:
-    "CNVRTED scans the dark funnel across LinkedIn, Reddit, X and the open web to surface accounts showing real buying signals - so you can engage at the right time.",
+  whatItIs: "CNVRTED shows you which accounts are ready to buy - and exactly why, today.",
+  goal:
+    "We scan LinkedIn, Reddit, X and the open web for hiring, funding and tech signals, so your team spends time on accounts that are actually in-market - not just a good fit on paper.",
   cta: "Join the waitlist",
   microcopy: "Be first to access  -  No spam. Ever.",
   noiseLabel: "Noise",
