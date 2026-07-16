@@ -18,15 +18,6 @@ const SOURCES = [
   { key: 'signals', label: 'Tech Intent', icon: ChartLineUp, angle: 210, distance: 270 },
 ] as const
 
-const PROFILE_FIELDS = [
-  { label: 'Company', value: HERO.visualCompanyName },
-  { label: 'Funding', value: '$25M Series B' },
-  { label: 'Hiring', value: '12 open roles' },
-  { label: 'Tech Stack', value: 'Salesforce, AWS' },
-  { label: 'Pain Signals', value: 'Support tickets ↑' },
-  { label: 'Leadership', value: 'New VP Sales' },
-] as const
-
 const degToRad = (deg: number) => (deg * Math.PI) / 180
 const getCoords = (angle: number, distance: number) => ({
   x: Math.cos(degToRad(angle)) * distance,
@@ -64,15 +55,19 @@ function SourceNode({ source, progress, index, radiusScale, showLabels }: { sour
   const x = raw.x * radiusScale
   const y = raw.y * radiusScale
 
-  // Stagger entry
-  const start = index * 0.05
-  const end = start + 0.1
+  // Stagger entry — tuned so every source (including the last-staggered one)
+  // fully fades in well before the shared exit window at [0.4, 0.45].
+  // Previously the beam's fade-in window could overrun into the exit
+  // window for higher-index sources, producing non-monotonic keyframes
+  // (undefined interpolation — the cause of lines flashing unpredictably).
+  const start = index * 0.045
+  const end = start + 0.06
   const opacity = useTransform(progress, [start, end, 0.4, 0.45], [0, 1, 1, 0])
   const scale = useTransform(progress, [start, end], [0.5, 1])
 
   // Beam line
-  const beamProgress = useTransform(progress, [end, end + 0.15], [0, 1])
-  const beamOpacity = useTransform(progress, [end, end + 0.15, 0.4, 0.45], [0, 1, 1, 0])
+  const beamProgress = useTransform(progress, [end, end + 0.05], [0, 1])
+  const beamOpacity = useTransform(progress, [end, end + 0.05, 0.4, 0.45], [0, 1, 1, 0])
 
   // Data packet — a small dot that travels from the source down the beam
   // to the center, looping while the beam is live. Purely additive: reads
@@ -162,7 +157,10 @@ function CentralCore({ progress }: { progress: MotionValue }) {
 
 function EnrichedProfile({ progress, reducedMotion }: { progress: MotionValue; reducedMotion: boolean }) {
   const y = useTransform(progress, [0.45, 0.55], [40, 0])
-  const opacity = useTransform(progress, [0.45, 0.55, 0.86, 0.94], [0, 1, 1, 0])
+  // Card is on screen for [0.45, 0.8] then crossfades straight back to the
+  // source constellation — no extra dwell after the score finishes revealing
+  // (score completes at 0.72), so the loop restarts promptly.
+  const opacity = useTransform(progress, [0.45, 0.55, 0.78, 0.84], [0, 1, 1, 0])
   const rotateX = useTransform(progress, [0.45, 0.55], [15, 0])
 
   const scoreOpacity = useTransform(progress, [0.6, 0.65], [0, 1])
@@ -217,25 +215,6 @@ function EnrichedProfile({ progress, reducedMotion }: { progress: MotionValue; r
               {isFinalState ? 92 : score}
             </span>
           </motion.div>
-        </div>
-
-        <div className="relative z-10 space-y-3.5">
-          {PROFILE_FIELDS.map((field, i) => {
-            const fieldStart = 0.55 + i * 0.03
-            const fieldOpacity = useTransform(progress, [fieldStart, fieldStart + 0.04], [0, 1])
-            const fieldX = useTransform(progress, [fieldStart, fieldStart + 0.04], [-15, 0])
-            
-            return (
-              <motion.div 
-                key={field.label} 
-                style={{ opacity: isFinalState ? 1 : fieldOpacity, x: isFinalState ? 0 : fieldX }} 
-                className="flex justify-between border-b border-white/5 pb-2.5"
-              >
-                <span className="font-mono text-[11px] uppercase tracking-wider text-white/40">{field.label}</span>
-                <span className="text-[14px] font-medium text-white/95">{field.value}</span>
-              </motion.div>
-            )
-          })}
         </div>
       </div>
     </motion.div>
@@ -307,11 +286,12 @@ export function StoryVisual({ className = '', compact = false }: StoryVisualProp
 
   // Center node stays fully hidden while the glass card is shown, then
   // crossfades back in over the EXACT same window the card fades out in
-  // ([0.86, 0.94], matching EnrichedProfile's opacity keyframes below).
+  // ([0.78, 0.84], matching EnrichedProfile's opacity keyframes above).
   // Card-opacity + orb-opacity always sum to 1 across that window, so the
   // handoff is a true crossfade — never both visible (a "pop"), never both
-  // invisible (a dead gap).
-  const bgDim = useTransform(progress, [0.4, 0.5, 0.86, 0.94], [1, 0, 0, 1])
+  // invisible (a dead gap). Shortened from [0.86,0.94] so the loop restarts
+  // promptly after the score reveals instead of sitting on a static card.
+  const bgDim = useTransform(progress, [0.4, 0.5, 0.78, 0.84], [1, 0, 0, 1])
 
   return (
     <div
