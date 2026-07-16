@@ -1,4 +1,5 @@
 import { HeroSection } from '@/components/sections/HeroSection'
+import { StoryExperience } from '@/components/sections/StoryExperience'
 import { TrustBar } from '@/components/sections/TrustBar'
 import { FlowchartSection } from '@/components/sections/FlowchartSection'
 import { IntentCardsSection } from '@/components/sections/IntentCardsSection'
@@ -14,6 +15,7 @@ export default function HomePage() {
     <>
       <main id="main-content">
         <HeroSection />
+        <StoryExperience />
         <TrustBar />
         <FlowchartSection />
         <IntentCardsSection />

@@ -2,6 +2,9 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { SignalMark } from '@/components/ui/SignalMark'
+import { CornerFrame } from '@/components/ui/CornerFrame'
+import { EASE } from '@/lib/tokens'
 
 /**
  * The pipeline payoff (Score → Summary → Outreach → CRM → Pipeline Created)
@@ -37,11 +40,14 @@ const PIPELINE_STEPS = [
     label: 'Intent Score',
     description: 'The moment an account crosses the intent threshold, CNVRTED assigns a 0–100 score so your reps know exactly who to prioritise first.',
     example: (
-      <div className="w-full max-w-[400px] rounded-xl border p-4 flex flex-col gap-3" style={{ borderColor: 'var(--color-accent)', background: 'var(--color-surface-raised)' }}>
+      <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <span className="font-semibold text-text-primary">Acme Corp</span>
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-accent text-on-accent">HIGH INTENT</span>
+            <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded bg-accent text-on-accent">
+              <SignalMark size={9} />
+              HIGH INTENT
+            </span>
             <span className="text-2xl font-bold tabular-nums text-text-primary">92</span>
           </div>
         </div>
@@ -56,7 +62,7 @@ const PIPELINE_STEPS = [
     label: 'AI Summary',
     description: 'CNVRTED writes a plain-English summary of why the account is in-market right now — no digging through a dozen browser tabs.',
     example: (
-      <div className="w-full max-w-[400px] rounded-xl border border-border bg-surface-raised p-4 flex flex-col gap-2">
+      <div className="flex flex-col gap-2">
         <p className="text-[10px] font-mono uppercase tracking-widest text-text-tertiary">AI summary</p>
         <p className="text-sm text-text-secondary leading-relaxed">
           Acme Corp just raised a $25M Series B and opened 12 sales roles — they’re scaling GTM and likely evaluating tooling now.
@@ -69,7 +75,7 @@ const PIPELINE_STEPS = [
     label: 'Personalized Outreach',
     description: 'A ready-to-send outreach draft is generated, tailored to the exact signal that flagged the account in the first place.',
     example: (
-      <div className="w-full max-w-[400px] rounded-xl border border-border bg-surface-raised p-4 flex flex-col gap-2">
+      <div className="flex flex-col gap-2">
         <p className="text-[10px] font-mono uppercase tracking-widest text-text-tertiary">Draft outreach</p>
         <p className="text-xs text-text-tertiary">Subject: Scaling outbound after your Series B?</p>
         <p className="text-sm text-text-secondary leading-relaxed">
@@ -83,7 +89,7 @@ const PIPELINE_STEPS = [
     label: 'CRM',
     description: 'The account and all of its context sync straight into Salesforce or HubSpot — right where your team already works.',
     example: (
-      <div className="w-full max-w-[400px] rounded-xl border border-border bg-surface-raised p-4 flex flex-col gap-3">
+      <div className="flex flex-col gap-3">
         <span className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-text-tertiary">
           <SalesforceMark />
           <HubSpotMark />
@@ -101,7 +107,7 @@ const PIPELINE_STEPS = [
     label: 'Pipeline Created',
     description: 'A new opportunity lands in your pipeline with the signal, score and summary attached — timed to exactly when they’re ready to buy.',
     example: (
-      <div className="w-full max-w-[400px] rounded-xl border p-4 flex flex-col gap-3" style={{ borderColor: 'var(--color-accent)', background: 'var(--color-surface-raised)' }}>
+      <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium text-text-primary">Acme Corp — New Business</span>
           <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-accent text-on-accent">OPEN</span>
@@ -118,7 +124,8 @@ const PIPELINE_STEPS = [
 
 export function PipelineScrollSection() {
   const [active, setActive] = useState<string>('score')
-  const activeStep = PIPELINE_STEPS.find((s) => s.id === active)
+  const activeIndex = PIPELINE_STEPS.findIndex((s) => s.id === active)
+  const activeStep = PIPELINE_STEPS[activeIndex]
 
   return (
     <section aria-label="From score to pipeline" className="relative bg-background py-20 md:py-28">
@@ -126,7 +133,8 @@ export function PipelineScrollSection() {
 
         {/* Header */}
         <div className="text-center mb-16">
-          <p className="text-caption font-mono text-text-tertiary uppercase tracking-[0.08em] mb-3">
+          <p className="text-caption font-mono text-accent uppercase tracking-[0.08em] mb-3 flex items-center justify-center gap-1.5">
+            <SignalMark size={11} />
             AFTER THE SIGNAL
           </p>
           <h2 className="text-h2 text-text-primary font-semibold">
@@ -136,8 +144,14 @@ export function PipelineScrollSection() {
 
         {/* Timeline of clickable nodes */}
         <div className="relative flex items-start">
-          {/* Connecting line behind the nodes */}
+          {/* Connecting line — teal fill shows progress up to the active step */}
           <div className="absolute left-0 right-0 top-2 h-px bg-border" aria-hidden="true" />
+          <motion.div
+            className="absolute left-0 top-2 h-px bg-accent origin-left"
+            aria-hidden="true"
+            animate={{ width: `${(activeIndex / (PIPELINE_STEPS.length - 1)) * 100}%` }}
+            transition={{ duration: 0.35, ease: EASE.default }}
+          />
 
           {PIPELINE_STEPS.map((step) => {
             const isActive = active === step.id
@@ -171,32 +185,35 @@ export function PipelineScrollSection() {
           })}
         </div>
 
-        {/* Detail panel — fills the section for the active step. Keyed so it
+        {/* Detail panel — corner-frame treatment matching the rest of the site,
             re-plays its entrance each time a different step is selected. */}
         {activeStep && (
           <motion.div
             key={activeStep.id}
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25 }}
-            className="mt-14 min-h-[45vh] rounded-2xl border p-8 md:p-16 flex flex-col md:flex-row gap-8 md:gap-16 items-center justify-center"
-            style={{
-              backgroundColor: 'var(--color-accent-dim)',
-              borderColor: 'rgba(44,196,187,0.25)',
-            }}
+            transition={{ duration: 0.35, ease: EASE.default }}
+            className="mt-14"
           >
-            <div className="flex-1 max-w-[560px]">
-              <p className="text-h2 font-semibold text-text-primary mb-6">{activeStep.label}</p>
-              <p className="text-body-lg text-text-secondary leading-relaxed">{activeStep.description}</p>
-            </div>
+            <CornerFrame className="flex flex-col md:flex-row gap-10 md:gap-16 items-center p-8 md:p-14" bracket={18}>
+              <div className="flex-1 max-w-[480px]">
+                <p className="text-[10px] font-mono uppercase tracking-widest text-accent mb-3">
+                  Step {activeIndex + 1} of {PIPELINE_STEPS.length}
+                </p>
+                <p className="text-h2 font-semibold text-text-primary mb-5">{activeStep.label}</p>
+                <p className="text-body-lg text-text-secondary leading-relaxed">{activeStep.description}</p>
+              </div>
 
-            {/* Concrete example for this step */}
-            <div className="flex-shrink-0 flex flex-col gap-2">
-              <p className="text-caption font-mono uppercase tracking-widest text-text-tertiary" style={{ fontSize: 10 }}>
-                Example
-              </p>
-              {activeStep.example}
-            </div>
+              {/* Concrete example for this step */}
+              <div className="w-full max-w-[380px] shrink-0 flex flex-col gap-2">
+                <p className="text-caption font-mono uppercase tracking-widest text-text-tertiary" style={{ fontSize: 10 }}>
+                  Example
+                </p>
+                <div className="rounded-lg border border-border bg-surface p-4">
+                  {activeStep.example}
+                </div>
+              </div>
+            </CornerFrame>
           </motion.div>
         )}
       </div>
