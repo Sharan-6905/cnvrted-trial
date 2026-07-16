@@ -229,6 +229,58 @@ h1, h2,
   animation: signal-pulse 1.6s ease-in-out infinite;
 }
 
+/* ─── Story Visual — decorative spins ──────────────────────────────────────────
+ * Continuous, story-independent rotations for StoryVisual (hero data-gathering
+ * animation). Run as CSS keyframes rather than JS/Framer Motion so they live
+ * on the compositor thread and can never drift against or fight with the
+ * JS-driven story timeline in the component.
+ * ─────────────────────────────────────────────────────────────────────────── */
+@keyframes story-sweep {
+  to { transform: rotate(360deg); }
+}
+.animate-story-sweep {
+  animation: story-sweep 8s linear infinite;
+}
+
+@keyframes story-core-spin {
+  to { transform: rotate(360deg); }
+}
+.animate-story-core-spin {
+  animation: story-core-spin 12s linear infinite;
+}
+
+@keyframes story-scan {
+  0%   { top: 0%; }
+  100% { top: 100%; }
+}
+.animate-story-scan {
+  animation: story-scan 2.5s linear infinite;
+}
+
+/* ─── Signal Story Section — decorative loops ─────────────────────────────────
+ * Same principle as the Story Visual spins above: continuous "aliveness" cues
+ * that carry no scroll-scrubbed narrative meaning run as CSS keyframes, so
+ * they keep playing smoothly even while scroll position (and therefore the
+ * JS-driven scene choreography) is momentarily static.
+ * ─────────────────────────────────────────────────────────────────────────── */
+@keyframes signal-breathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.06); }
+}
+.signal-breathe {
+  animation: signal-breathe 3.2s ease-in-out infinite;
+}
+
+@keyframes signal-flow-dot {
+  0%   { left: 0%;   opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+.signal-flow-dot {
+  animation: signal-flow-dot 1.4s linear infinite;
+}
+
 /* ─── Typography Defaults ──────────────────────────────────────────────────────
  * Semantic heading elements inherit weight from the type scale.
  * Components apply specific --text-{scale} utilities.
